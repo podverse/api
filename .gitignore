@@ -8,6 +8,9 @@
 
 # API keys and secrets
 .env
+.env-new
+.env-old
+.env-old-removing
 
 # Dependency directory
 node_modules
