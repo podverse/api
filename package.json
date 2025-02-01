@@ -15,7 +15,7 @@
     "dev": "ts-node ./src/index.ts",
     "dev:watch": "nodemon --watch '../**/*.ts' --exec 'ts-node' src/index.ts",
     "lint": "eslint 'src/**/*.{ts,js}'",
-    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "start": "ts-node ./dist/index.js"
   },
   "license": "AGPLv3",
