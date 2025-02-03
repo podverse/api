@@ -5,14 +5,14 @@ import "reflect-metadata";
 import bodyParser from 'body-parser';
 import express, { NextFunction, Request, Response } from "express";
 import { logger, logError } from 'podverse-helpers';
-import { AppDataSource } from "podverse-orm";
-import { parseAllRSSFeeds } from 'podverse-parser';
+import { AppDataSourceRead, AppDataSourceReadWrite } from "podverse-orm";
 import { config } from '@api/config';
 import { channelRouter } from '@api/routes/channel';
 import { feedRouter } from '@api/routes/feed';
+import { itemRouter } from '@api/routes/item';
 import { mediumRouter } from '@api/routes/medium';
 
-console.log(`NODE_ENV = ${config.nodeEnv}`);
+logger.info(`NODE_ENV = ${config.nodeEnv}`);
 
 const app = express();
 const port = 1234;
@@ -25,24 +25,17 @@ const baseUrl = `${config.api.prefix}${config.api.version}`;
 export const startApp = async () => {
   try {
     logger.info("Connecting to the database");
-    await AppDataSource.initialize();
+    await AppDataSourceRead.initialize();
+    await AppDataSourceReadWrite.initialize();
     logger.info("Connected to the database");
 
     app.get(`${baseUrl}/`, (req: Request, res: Response) => {
       res.send(`The server is running on port ${port}`);
     });
 
-    app.get(`${baseUrl}/parse-all`, async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const data = await parseAllRSSFeeds();
-        res.status(200).send(data);
-      } catch (err) {
-        next(err);
-      }
-    });
-
     app.use(channelRouter);
     app.use(feedRouter);
+    app.use(itemRouter);
     app.use(mediumRouter);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,17 +1,13 @@
-import { Router, Request, Response } from 'express';
-import { MediumService } from 'podverse-orm';
+import { Router } from 'express';
 import { config } from '@api/config';
-
-const mediumService = new MediumService();
+import { ChannelController } from '@api/controllers/channel';
+import { asyncHandler } from '@api/middleware/asyncHandler';
 
 const router = Router();
 
 router.use(`${config.api.prefix}${config.api.version}/channel`, router);
 
-router.get('/', async (req: Request, res: Response) => {
-  const result = await mediumService.mediumGetAll();
-
-  res.json(result);
-});
+router.get('/:idOrIdText', asyncHandler(ChannelController.getByIdOrTextId));
+router.get('/', asyncHandler(ChannelController.getMany));
 
 export const channelRouter = router;
