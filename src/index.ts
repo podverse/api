@@ -5,8 +5,9 @@ import "reflect-metadata";
 import bodyParser from 'body-parser';
 import express, { NextFunction, Request, Response } from "express";
 import { logger, logError } from 'podverse-helpers';
-import { AppDataSourceRead, AppDataSourceReadWrite } from "podverse-orm";
+import { AppDataSourceRead, AppDataSourceReadWrite, CategoryService } from "podverse-orm";
 import { config } from '@api/config';
+import { categoryRouter } from '@api/routes/category';
 import { channelRouter } from '@api/routes/channel';
 import { feedRouter } from '@api/routes/feed';
 import { itemRouter } from '@api/routes/item';
@@ -29,10 +30,14 @@ export const startApp = async () => {
     await AppDataSourceReadWrite.initialize();
     logger.info("Connected to the database");
 
+    const categoryService = new CategoryService();
+    await categoryService.setCategoryCache();
+
     app.get(`${baseUrl}/`, (req: Request, res: Response) => {
       res.send(`The server is running on port ${port}`);
     });
 
+    app.use(categoryRouter);
     app.use(channelRouter);
     app.use(feedRouter);
     app.use(itemRouter);
