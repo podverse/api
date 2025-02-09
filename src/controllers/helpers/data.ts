@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Response } from "express";
 
 export function handleReturnDataOrNotFound(res: Response, data: any, label: string) {
