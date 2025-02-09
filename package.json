@@ -35,6 +35,7 @@
     "@dotenvx/dotenvx": "^1.6.4",
     "body-parser": "^1.20.2",
     "express": "^4.19.2",
+    "joi": "^17.13.3",
     "module-alias": "^2.2.3",
     "podverse-helpers": "^5.0.4",
     "podverse-orm": "^5.0.3",
