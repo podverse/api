@@ -4,8 +4,8 @@ import { MediumService } from 'podverse-orm';
 const mediumService = new MediumService();
 
 export class MediumController {
-  static async mediumsGetAll(req: Request, res: Response): Promise<void> {
-    const result = await mediumService.mediumGetAll();
+  static async getAll(req: Request, res: Response): Promise<void> {
+    const result = await mediumService.getAll();
     res.json(result);
   }
 }
