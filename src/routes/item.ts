@@ -7,9 +7,8 @@ const router = Router();
 
 router.use(`${config.api.prefix}${config.api.version}/item`, router);
 
-router.use('/channel/:channelIdOrIdText/live-items', asyncHandler(ItemController.getManyWithLiveItemByChannel));
-router.use('/channel/:channelIdOrIdText', asyncHandler(ItemController.getManyByChannel));
-
+router.get('/channel/:channelIdOrIdText/live-items', asyncHandler(ItemController.getManyWithLiveItemByChannel));
+router.get('/channel/:channelIdOrIdText', asyncHandler(ItemController.getManyByChannel));
 router.get('/:idOrIdText', asyncHandler(ItemController.getByIdOrTextId));
 router.get('/', asyncHandler(ItemController.getMany));
 
