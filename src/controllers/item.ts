@@ -54,11 +54,11 @@ async function fetchItems(serviceMethod: Function, req: Request, res: Response, 
 }
 
 export class ItemController {
-  static async getByIdOrTextId(req: Request, res: Response): Promise<void> {
+  static async getByIdOrIdText(req: Request, res: Response): Promise<void> {
     const { idOrIdText } = req.params;
     const config = { relations: allRelations };
     try {
-      const data = await itemService.getByIdOrTextId(idOrIdText, config);
+      const data = await itemService.getByIdOrIdText(idOrIdText, config);
       handleReturnDataOrNotFound(res, data, 'Item');
     } catch (error) {
       handleInternalError(res, error);

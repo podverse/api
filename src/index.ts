@@ -7,6 +7,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { logger, logError } from 'podverse-helpers';
 import { AppDataSourceRead, AppDataSourceReadWrite, CategoryService } from "podverse-orm";
 import { config } from '@api/config';
+import { accountRouter } from '@api/routes/account';
 import { categoryRouter } from '@api/routes/category';
 import { channelRouter } from '@api/routes/channel';
 import { feedRouter } from '@api/routes/feed';
@@ -37,6 +38,7 @@ export const startApp = async () => {
       res.send(`The server is running on port ${port}`);
     });
 
+    app.use(accountRouter);
     app.use(categoryRouter);
     app.use(channelRouter);
     app.use(feedRouter);

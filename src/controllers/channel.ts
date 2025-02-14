@@ -33,11 +33,11 @@ const allRelations = [
 ]
 
 export class ChannelController {
-  static async getByIdOrTextId(req: Request, res: Response): Promise<void> {
+  static async getByIdOrIdText(req: Request, res: Response): Promise<void> {
     try {
       const { idOrIdText } = req.params;
       const config = { relations: allRelations };
-      const data = await channelService.getByIdOrTextId(idOrIdText, config);
+      const data = await channelService.getByIdOrIdText(idOrIdText, config);
       handleReturnDataOrNotFound(res, data, 'Channel');
     } catch (error) {
       handleInternalError(res, error);
