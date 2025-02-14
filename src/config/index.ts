@@ -51,6 +51,7 @@ type Config = {
   };
   verifyEmail: {
     pagePath: string;
+    tokenExpiration: number;
   };
   web: {
     protocol: string;
@@ -118,6 +119,7 @@ export const config: Config = {
   },
   verifyEmail: {
     pagePath: process.env.VERIFY_EMAIL_PAGE_PATH || '/',
+    tokenExpiration: parseInt(process.env.VERIFY_EMAIL_TOKEN_EXPIRATION || '31540000', 10),
   },
   web: {
     protocol: process.env.WEB_PROTOCOL || 'http',

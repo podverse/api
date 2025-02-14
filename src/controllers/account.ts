@@ -1,9 +1,13 @@
 import { Request, Response } from 'express';
-import { AccountService } from 'podverse-orm';
+import { ERROR_MESSAGES } from 'podverse-helpers';
+import { AccountResetPasswordService, AccountService, AccountVerificationService } from 'podverse-orm';
+import { v4 as uuidv4 } from 'uuid';
+import { config } from '@api/config';
 import { handleReturnDataOrNotFound } from '@api/controllers/helpers/data';
 import { handleInternalError } from '@api/controllers/helpers/error';
 import { getPaginationParams } from '@api/controllers/helpers/pagination';
-import { ERROR_MESSAGES } from 'podverse-helpers';
+import { sendVerificationEmail } from '@api/lib/mailer/sendVerificationEmail';
+import { sendResetPasswordEmail } from '@api/lib/mailer/sendResetPasswordEmail';
 
 const accountService = new AccountService();
 
@@ -29,6 +33,44 @@ const privateRelations = [
   // 'account_up_devices',
   // 'account_verification'
 ];
+
+async function sendVerificationEmailHelper(email: string): Promise<void> {
+  const account = await accountService.getByEmail(email);
+
+  if (!account) {
+    throw new Error('Account not found.');
+  }
+
+  const verificationToken = uuidv4();
+  const verificationTokenExpiresAt = new Date(Date.now() + config.verifyEmail.tokenExpiration);
+
+  const accountVerificationService = new AccountVerificationService();
+  await accountVerificationService.update(account, {
+    verification_token: verificationToken,
+    verification_token_expires_at: verificationTokenExpiresAt
+  });
+
+  await sendVerificationEmail(email, account.id_text, verificationToken);
+}
+
+async function sendResetPasswordEmailHelper(email: string): Promise<void> {
+  const account = await accountService.getByEmail(email);
+
+  if (!account) {
+    throw new Error('Account not found.');
+  }
+
+  const resetToken = uuidv4();
+  const resetTokenExpiresAt = new Date(Date.now() + config.resetPassword.tokenExpiration);
+
+  const accountResetPasswordService = new AccountResetPasswordService();
+  await accountResetPasswordService.update(account, {
+    reset_token: resetToken,
+    reset_token_expires_at: resetTokenExpiresAt
+  });
+
+  await sendResetPasswordEmail(email, account.id_text, resetToken);
+}
 
 export class AccountController {
   static async getByIdText(req: Request, res: Response): Promise<void> {
@@ -89,6 +131,7 @@ export class AccountController {
     try {
       const { email, password } = req.body;
       await accountService.create({ email, password });
+      await sendVerificationEmailHelper(email);
       res.json({
         message: 'Account created'
       });
@@ -104,4 +147,29 @@ export class AccountController {
       }
     }
   }
+
+  static async sendVerificationEmail(req: Request, res: Response): Promise<void> {
+    try {
+      const { email } = req.body;
+      await sendVerificationEmailHelper(email);
+      res.json({
+        message: 'Verification email sent'
+      });
+    } catch (error) {
+      handleInternalError(res, error);
+    }
+  }
+
+  static async sendResetPasswordEmail(req: Request, res: Response): Promise<void> {
+    try {
+      const { email } = req.body;
+      await sendResetPasswordEmailHelper(email);
+      res.json({
+        message: 'Reset password email sent'
+      });
+    } catch (error) {
+      handleInternalError(res, error);
+    }
+  }
+
 }

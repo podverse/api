@@ -45,7 +45,8 @@
     "passport-local": "^1.0.0",
     "podverse-helpers": "^5.0.4",
     "podverse-orm": "^5.0.3",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@eslint/config-array": "^0.18.0",

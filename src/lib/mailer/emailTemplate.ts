@@ -37,9 +37,9 @@ export const emailTemplate = ({ buttonLink, buttonText, headerText, paragraphTex
 
 const addressSection = config.legal.name || config.legal.address ? `
   <div class="address" style="color: #555; font-size: 14px; line-height: 20px; margin: 0; text-align: center;">
-    ${config.legal.name};
+    ${config.legal.name}
     ${config.legal.name && config.legal.address ? '<br />' : ''}
-    ${config.legal.address};
+    ${config.legal.address}
   </div>
 ` : '';
 
@@ -56,9 +56,9 @@ const twitterIcon = socialIconTemplate(config.social.twitter.imageUrl, config.so
 
 const socialIcons = config.social.facebook.pageUrl || config.social.github.pageUrl || config.social.reddit.pageUrl || config.social.twitter.pageUrl ? `
   <div class="social-icons" style="margin: 36px 32px 28px 32px; text-align: center;">
-    ${facebookIcon};
-    ${githubIcon};
-    ${redditIcon};
-    ${twitterIcon};
+    ${facebookIcon}
+    ${githubIcon}
+    ${redditIcon}
+    ${twitterIcon}
   </div>
 ` : '';
