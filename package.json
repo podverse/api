@@ -13,7 +13,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node ./src/index.ts",
-    "dev:watch": "nodemon --watch 'src' --watch $(realpath node_modules/podverse-helpers) --watch $(realpath node_modules/podverse-orm) --exec 'ts-node' src/index.ts",
+    "dev:watch": "tsc --watch & nodemon --watch 'src' --watch $(realpath node_modules/podverse-helpers) --watch $(realpath node_modules/podverse-orm) --watch 'dist' dist/index.js",
     "lint": "eslint 'src/**/*.{ts,js}'",
     "prepublishOnly": "npm run build",
     "start": "ts-node ./dist/index.js"
@@ -34,9 +34,14 @@
   "dependencies": {
     "@dotenvx/dotenvx": "^1.6.4",
     "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.7",
     "express": "^4.19.2",
     "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
     "module-alias": "^2.2.3",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
     "podverse-helpers": "^5.0.4",
     "podverse-orm": "^5.0.3",
     "reflect-metadata": "^0.2.2"
@@ -45,8 +50,12 @@
     "@eslint/config-array": "^0.18.0",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.8.0",
+    "@types/cookie-parser": "^1.4.8",
     "@types/express": "^4.17.21",
     "@types/node": "^22.1.0",
+    "@types/passport": "^1.0.17",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/passport-local": "^1.0.38",
     "eslint": "^9.9.0",
     "globals": "^15.9.0",
     "nodemon": "^3.1.4",

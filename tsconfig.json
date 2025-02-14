@@ -16,10 +16,12 @@
     "baseUrl": "./",
     "paths": {
       "@api/*": ["src/*"]
-    }
+    },
+    "typeRoots": ["./src/@types", "./node_modules/@types"]
   },
   "include": [
-    "./src/**/*.ts"
+    "./src/**/*.ts",
+    "./src/@types/**/*.d.ts"
   ],
   "exclude": ["node_modules"]
 }

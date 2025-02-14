@@ -3,6 +3,7 @@ require('@dotenvx/dotenvx').config();
 
 import "reflect-metadata";
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import express, { NextFunction, Request, Response } from "express";
 import { logger, logError } from 'podverse-helpers';
 import { AppDataSourceRead, AppDataSourceReadWrite, CategoryService } from "podverse-orm";
@@ -13,6 +14,8 @@ import { channelRouter } from '@api/routes/channel';
 import { feedRouter } from '@api/routes/feed';
 import { itemRouter } from '@api/routes/item';
 import { mediumRouter } from '@api/routes/medium';
+import { authRouter } from './routes/auth';
+import { initializePassport } from './middleware/auth';
 
 logger.info(`NODE_ENV = ${config.nodeEnv}`);
 
@@ -21,6 +24,10 @@ const port = 1234;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cookieParser());
+
+app.use(initializePassport());
 
 const baseUrl = `${config.api.prefix}${config.api.version}`;
 
@@ -39,6 +46,7 @@ export const startApp = async () => {
     });
 
     app.use(accountRouter);
+    app.use(authRouter);
     app.use(categoryRouter);
     app.use(channelRouter);
     app.use(feedRouter);

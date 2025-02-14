@@ -12,24 +12,23 @@ const publicRelations = [
   'account_profile',
 ];
 
-/*
 const privateRelations = [
   'account_admin_roles',
-  'account_app_store_purchases',
+  // 'account_app_store_purchases',
   'account_credentials',
-  'account_fcm_devices',
+  // 'account_fcm_devices',
   'account_following_accounts',
   'account_following_add_by_rss_channels',
   'account_following_playlists',
-  'account_google_play_purchases',
+  // 'account_google_play_purchases',
   'account_membership_status',
+  'account_membership_status.account_membership',
   'account_notifications',
-  'account_paypal_orders',
-  'account_reset_password',
-  'account_up_devices',
-  'account_verification'
+  // 'account_paypal_orders',
+  // 'account_reset_password',
+  // 'account_up_devices',
+  // 'account_verification'
 ];
-*/
 
 export class AccountController {
   static async getByIdText(req: Request, res: Response): Promise<void> {
@@ -37,6 +36,29 @@ export class AccountController {
       const { id_text } = req.params;
       const config = { relations: publicRelations };
       const data = await accountService._getByIdText(id_text, config);
+      handleReturnDataOrNotFound(res, data, 'Account');
+    } catch (error) {
+      handleInternalError(res, error);
+    }
+  }
+
+  static async getLoggedInAccount(req: Request, res: Response): Promise<void> {
+    try {
+      const user = req.user;
+
+      if (!user?.id) {
+        throw new Error('User is not logged in.');
+      }
+
+      const data = await accountService.get(user.id, { relations: [
+        ...publicRelations,
+        ...privateRelations
+      ] });
+
+      if (data?.account_credentials) {
+        delete data.account_credentials.password;
+      }
+
       handleReturnDataOrNotFound(res, data, 'Account');
     } catch (error) {
       handleInternalError(res, error);
