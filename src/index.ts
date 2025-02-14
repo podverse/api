@@ -8,14 +8,14 @@ import express, { NextFunction, Request, Response } from "express";
 import { logger, logError } from 'podverse-helpers';
 import { AppDataSourceRead, AppDataSourceReadWrite, CategoryService } from "podverse-orm";
 import { config } from '@api/config';
+import { initializePassport } from '@api/lib/auth';
 import { accountRouter } from '@api/routes/account';
 import { categoryRouter } from '@api/routes/category';
 import { channelRouter } from '@api/routes/channel';
 import { feedRouter } from '@api/routes/feed';
 import { itemRouter } from '@api/routes/item';
 import { mediumRouter } from '@api/routes/medium';
-import { authRouter } from './routes/auth';
-import { initializePassport } from './middleware/auth';
+import { authRouter } from '@api/routes/auth';
 
 logger.info(`NODE_ENV = ${config.nodeEnv}`);
 

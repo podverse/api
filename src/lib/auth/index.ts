@@ -114,3 +114,11 @@ export const ensureAuthenticated = (req: Request, res: Response, next: NextFunct
     next();
   });
 };
+
+export const logout = (req: Request, res: Response) => {
+  res.clearCookie('jwt', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production'
+  });
+  return res.json({ message: 'Logged out successfully' });
+};

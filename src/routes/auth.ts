@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { authenticate, ensureAuthenticated, logout } from '@api/middleware/auth';
 import { config } from '@api/config';
-import { asyncHandler } from '@api/middleware/asyncHandler';
 import { AccountController } from '@api/controllers/account';
+import { authenticate, ensureAuthenticated, logout } from '@api/lib/auth';
+import { asyncHandler } from '@api/middleware/asyncHandler';
 
 const router = Router();
 
