@@ -12,6 +12,8 @@ router.get('/', asyncHandler(AccountController.getMany));
 
 router.post('/send-verification-email', asyncHandler(AccountController.sendVerificationEmail));
 router.post('/send-reset-password-email', asyncHandler(AccountController.sendResetPasswordEmail));
+router.post('/verify-email', asyncHandler(AccountController.verifyEmail));
+router.post('/reset-password', asyncHandler(AccountController.resetPassword));
 router.post('/', asyncHandler(AccountController.create));
 
 export const accountRouter = router;

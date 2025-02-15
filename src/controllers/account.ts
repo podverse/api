@@ -160,6 +160,26 @@ export class AccountController {
     }
   }
 
+  static async verifyEmail(req: Request, res: Response): Promise<void> {
+    try {
+      const { token } = req.body;
+      const accountVerificationService = new AccountVerificationService();
+      const accountVerification = await accountVerificationService.getByToken(token);
+
+      if (!accountVerification) {
+        res.status(400).json({ message: 'Invalid or expired verification token' });
+        return;
+      }
+
+      const accountService = new AccountService();
+      await accountService.verifyEmail(accountVerification.account.id);
+
+      res.json({ message: 'Email verified successfully' });
+    } catch (error) {
+      handleInternalError(res, error);
+    }
+  }
+
   static async sendResetPasswordEmail(req: Request, res: Response): Promise<void> {
     try {
       const { email } = req.body;
@@ -172,4 +192,23 @@ export class AccountController {
     }
   }
 
+  static async resetPassword(req: Request, res: Response): Promise<void> {
+    try {
+      const { token, password } = req.body;
+      const accountResetPasswordService = new AccountResetPasswordService();
+      const accountResetPassword = await accountResetPasswordService.getByToken(token);
+
+      if (!accountResetPassword) {
+        res.status(400).json({ message: 'Invalid or expired reset password token' });
+        return;
+      }
+
+      const accountService = new AccountService();
+      await accountService.resetPassword(accountResetPassword.account.id, password);
+
+      res.json({ message: 'Password reset successfully' });
+    } catch (error) {
+      handleInternalError(res, error);
+    }
+  }
 }
