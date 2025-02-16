@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { config } from '@api/config';
 import { AccountController } from '@api/controllers/account';
 import { AccountFollowingAccountController } from '@api/controllers/accountFollowingAccount';
+import { AccountFollowingAddByRSSChannelController } from '@api/controllers/accountFollowingAddByRSSChannel';
 import { asyncHandler } from '@api/middleware/asyncHandler';
 
 const router = Router();
@@ -19,5 +20,8 @@ router.post('/', asyncHandler(AccountController.create));
 
 router.post('/follow/account', asyncHandler(AccountFollowingAccountController.followAccount));
 router.post('/unfollow/account', asyncHandler(AccountFollowingAccountController.unfollowAccount));
+
+router.post('/follow/add-by-rss-channel', asyncHandler(AccountFollowingAddByRSSChannelController.addOrUpdateRSSChannel));
+router.post('/unfollow/add-by-rss-channel', asyncHandler(AccountFollowingAddByRSSChannelController.removeRSSChannel));
 
 export const accountRouter = router;
