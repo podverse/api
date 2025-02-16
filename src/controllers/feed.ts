@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { FeedService } from 'podverse-orm';
 
-const feedService = new FeedService();
-
 export class FeedController {
+  private static feedService = new FeedService();
+
   static async create(req: Request, res: Response): Promise<void> {
     const { url, podcast_index_id } = req.body;
-    const result = await feedService.create({ url, podcast_index_id });
+    const result = await FeedController.feedService.create({ url, podcast_index_id });
     res.json(result);
   }
 }

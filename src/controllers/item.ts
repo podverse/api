@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
-import { Channel, ItemService } from 'podverse-orm';
+import { Channel, ItemService, Item } from 'podverse-orm';
 import { fetchChannel } from '@api/controllers/helpers/channel';
 import { handleReturnDataOrNotFound } from '@api/controllers/helpers/data';
-import { handleInternalError } from '@api/controllers/helpers/error';
+import { handleGenericErrorResponse } from '@api/controllers/helpers/error';
 import { getPaginationParams } from '@api/controllers/helpers/pagination';
-
-const itemService = new ItemService();
 
 const allRelations = [
   'item_about',
@@ -38,42 +36,60 @@ const allRelations = [
   'live_item'
 ];
 
-async function fetchItems(serviceMethod: Function, req: Request, res: Response, channel?: Channel) {
+type FetchItemsOptions = {
+  skip: number;
+  take: number;
+  relations: string[];
+  channel?: Channel;
+};
+
+async function fetchItems(
+  serviceMethod: (options: FetchItemsOptions) => Promise<Item[]>,
+  req: Request,
+  res: Response,
+  channel?: Channel
+): Promise<void> {
   try {
     const { page, limit, offset } = getPaginationParams(req);
-    const items = channel
-      ? await serviceMethod(channel, { skip: offset, take: limit, relations: allRelations })
-      : await serviceMethod({ skip: offset, take: limit, relations: allRelations });
+    const options: FetchItemsOptions = {
+      skip: offset,
+      take: limit,
+      relations: allRelations,
+      ...(channel && { channel })
+    };
+    const items = await serviceMethod(options);
     res.json({
       data: items,
       meta: { page }
     });
   } catch (error) {
-    handleInternalError(res, error);
+    handleGenericErrorResponse(res, error);
   }
 }
 
 export class ItemController {
+  private static itemService = new ItemService();
+
   static async getByIdOrIdText(req: Request, res: Response): Promise<void> {
     const { idOrIdText } = req.params;
     const config = { relations: allRelations };
     try {
-      const data = await itemService.getByIdOrIdText(idOrIdText, config);
+      const data = await ItemController.itemService.getByIdOrIdText(idOrIdText, config);
       handleReturnDataOrNotFound(res, data, 'Item');
     } catch (error) {
-      handleInternalError(res, error);
+      handleGenericErrorResponse(res, error);
     }
   }
 
   static async getMany(req: Request, res: Response): Promise<void> {
-    await fetchItems(itemService.getMany.bind(itemService), req, res);
+    await fetchItems(ItemController.itemService.getMany.bind(ItemController.itemService), req, res);
   }
 
   static async getManyByChannel(req: Request, res: Response): Promise<void> {
     const { channelIdOrIdText } = req.params;
     const channel = await fetchChannel(channelIdOrIdText, res);
     if (channel) {
-      await fetchItems(itemService.getManyByChannel.bind(itemService), req, res, channel);
+      await fetchItems(ItemController.itemService.getManyByChannel.bind(ItemController.itemService), req, res, channel);
     }
   }
 
@@ -81,7 +97,7 @@ export class ItemController {
     const { channelIdOrIdText } = req.params;
     const channel = await fetchChannel(channelIdOrIdText, res);
     if (channel) {
-      await fetchItems(itemService.getManyWithLiveItemByChannel.bind(itemService), req, res, channel);
+      await fetchItems(ItemController.itemService.getManyWithLiveItemByChannel.bind(ItemController.itemService), req, res, channel);
     }
   }
 }

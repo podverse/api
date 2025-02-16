@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
 import { ChannelService } from 'podverse-orm';
 import { handleReturnDataOrNotFound } from '@api/controllers/helpers/data';
-import { handleInternalError } from '@api/controllers/helpers/error';
+import { handleGenericErrorResponse } from '@api/controllers/helpers/error';
 import { getPaginationParams } from '@api/controllers/helpers/pagination';
-
-const channelService = new ChannelService();
 
 const allRelations = [
   'channel_about',
@@ -30,24 +28,26 @@ const allRelations = [
   'channel_txts',
   'channel_values',
   'channel_values.channel_value_recipients'
-]
+];
 
-export class ChannelController {
+class ChannelController {
+  private static channelService = new ChannelService();
+
   static async getByIdOrIdText(req: Request, res: Response): Promise<void> {
     try {
       const { idOrIdText } = req.params;
       const config = { relations: allRelations };
-      const data = await channelService.getByIdOrIdText(idOrIdText, config);
+      const data = await ChannelController.channelService.getByIdOrIdText(idOrIdText, config);
       handleReturnDataOrNotFound(res, data, 'Channel');
     } catch (error) {
-      handleInternalError(res, error);
+      handleGenericErrorResponse(res, error);
     }
   }
 
   static async getMany(req: Request, res: Response): Promise<void> {
     try {
       const { page, limit, offset } = getPaginationParams(req);
-      const channels = await channelService.getMany({
+      const channels = await ChannelController.channelService.getMany({
         skip: offset,
         take: limit,
         relations: allRelations
@@ -60,7 +60,9 @@ export class ChannelController {
         }
       });
     } catch (error) {
-      handleInternalError(res, error);
+      handleGenericErrorResponse(res, error);
     }
   }
 }
+
+export { ChannelController };
