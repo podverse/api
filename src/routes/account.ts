@@ -5,6 +5,7 @@ import { AccountFollowingAccountController } from '@api/controllers/accountFollo
 import { AccountFollowingAddByRSSChannelController } from '@api/controllers/accountFollowingAddByRSSChannel';
 import { AccountFollowingChannelController } from '@api/controllers/accountFollowingChannel';
 import { asyncHandler } from '@api/middleware/asyncHandler';
+import { AccountFollowingPlaylistController } from '@api/controllers/accountFollowingPlaylist';
 
 const router = Router();
 
@@ -27,5 +28,8 @@ router.post('/unfollow/add-by-rss-channel', asyncHandler(AccountFollowingAddByRS
 
 router.post('/follow/channel', asyncHandler(AccountFollowingChannelController.followChannel));
 router.post('/unfollow/channel', asyncHandler(AccountFollowingChannelController.unfollowChannel));
+
+router.post('/follow/playlist', asyncHandler(AccountFollowingPlaylistController.followPlaylist));
+router.post('/unfollow/playlist', asyncHandler(AccountFollowingPlaylistController.unfollowPlaylist));
 
 export const accountRouter = router;
