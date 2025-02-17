@@ -10,12 +10,13 @@ import { AppDataSourceRead, AppDataSourceReadWrite, CategoryService } from "podv
 import { config } from '@api/config';
 import { initializePassport } from '@api/lib/auth';
 import { accountRouter } from '@api/routes/account';
+import { authRouter } from '@api/routes/auth';
 import { categoryRouter } from '@api/routes/category';
 import { channelRouter } from '@api/routes/channel';
 import { feedRouter } from '@api/routes/feed';
 import { itemRouter } from '@api/routes/item';
 import { mediumRouter } from '@api/routes/medium';
-import { authRouter } from '@api/routes/auth';
+import { playlistRouter } from './routes/playlist';
 
 logger.info(`NODE_ENV = ${config.nodeEnv}`);
 
@@ -52,6 +53,7 @@ export const startApp = async () => {
     app.use(feedRouter);
     app.use(itemRouter);
     app.use(mediumRouter);
+    app.use(playlistRouter);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
