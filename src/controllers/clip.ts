@@ -78,7 +78,16 @@ class ClipController {
     }
   }
 
-  static async getClipsByAccount(req: Request, res: Response): Promise<void> {
+  static async getClipsPublic(req: Request, res: Response): Promise<void> {
+    try {
+      const clips = await ClipController.clipService.getMany();
+      res.status(200).json(clips);
+    } catch (err) {
+      handleGenericErrorResponse(res, err);
+    }
+  }
+
+  static async getClipsPrivate(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       const account = req.user!;
 
