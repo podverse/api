@@ -17,6 +17,7 @@ import { feedRouter } from '@api/routes/feed';
 import { itemRouter } from '@api/routes/item';
 import { mediumRouter } from '@api/routes/medium';
 import { playlistRouter } from './routes/playlist';
+import { clipRouter } from './routes/clip';
 
 logger.info(`NODE_ENV = ${config.nodeEnv}`);
 
@@ -50,6 +51,7 @@ export const startApp = async () => {
     app.use(authRouter);
     app.use(categoryRouter);
     app.use(channelRouter);
+    app.use(clipRouter);
     app.use(feedRouter);
     app.use(itemRouter);
     app.use(mediumRouter);
