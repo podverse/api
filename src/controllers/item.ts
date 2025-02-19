@@ -36,37 +36,6 @@ const allRelations = [
   'live_item'
 ];
 
-type FetchItemsOptions = {
-  skip: number;
-  take: number;
-  relations: string[];
-  channel?: Channel;
-};
-
-async function fetchItems(
-  serviceMethod: (options: FetchItemsOptions) => Promise<Item[]>,
-  req: Request,
-  res: Response,
-  channel?: Channel
-): Promise<void> {
-  try {
-    const { page, limit, offset } = getPaginationParams(req);
-    const options: FetchItemsOptions = {
-      skip: offset,
-      take: limit,
-      relations: allRelations,
-      ...(channel && { channel })
-    };
-    const items = await serviceMethod(options);
-    res.json({
-      data: items,
-      meta: { page }
-    });
-  } catch (error) {
-    handleGenericErrorResponse(res, error);
-  }
-}
-
 export class ItemController {
   private static itemService = new ItemService();
 
@@ -82,22 +51,65 @@ export class ItemController {
   }
 
   static async getMany(req: Request, res: Response): Promise<void> {
-    await fetchItems(ItemController.itemService.getMany.bind(ItemController.itemService), req, res);
+    try {
+      const { page, limit, offset } = getPaginationParams(req);
+      const options = {
+        skip: offset,
+        take: limit,
+        relations: allRelations
+      };
+      const items = await ItemController.itemService.getMany(options);
+      res.json({
+        data: items,
+        meta: { page }
+      });
+    } catch (error) {
+      handleGenericErrorResponse(res, error);
+    }
   }
 
   static async getManyByChannel(req: Request, res: Response): Promise<void> {
     const { channelIdOrIdText } = req.params;
-    const channel = await fetchChannel(channelIdOrIdText, res);
-    if (channel) {
-      await fetchItems(ItemController.itemService.getManyByChannel.bind(ItemController.itemService), req, res, channel);
+    try {
+      const channel = await fetchChannel(channelIdOrIdText, res);
+      if (channel) {
+        const { page, limit, offset } = getPaginationParams(req);
+        const options = {
+          skip: offset,
+          take: limit,
+          relations: allRelations,
+          where: { channel }
+        };
+        const items = await ItemController.itemService.getManyByChannel(channel, options);
+        res.json({
+          data: items,
+          meta: { page }
+        });
+      }
+    } catch (error) {
+      handleGenericErrorResponse(res, error);
     }
   }
 
   static async getManyWithLiveItemByChannel(req: Request, res: Response): Promise<void> {
     const { channelIdOrIdText } = req.params;
-    const channel = await fetchChannel(channelIdOrIdText, res);
-    if (channel) {
-      await fetchItems(ItemController.itemService.getManyWithLiveItemByChannel.bind(ItemController.itemService), req, res, channel);
+    try {
+      const channel = await fetchChannel(channelIdOrIdText, res);
+      if (channel) {
+        const { page, limit, offset } = getPaginationParams(req);
+        const options = {
+          skip: offset,
+          take: limit,
+          relations: allRelations
+        };
+        const items = await ItemController.itemService.getManyWithLiveItemByChannel(channel, options);
+        res.json({
+          data: items,
+          meta: { page }
+        });
+      }
+    } catch (error) {
+      handleGenericErrorResponse(res, error);
     }
   }
 }
