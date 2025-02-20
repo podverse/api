@@ -3,6 +3,7 @@ import { config } from '@api/config';
 import { PlaylistController } from '@api/controllers/playlist';
 import { PlaylistResourceBaseController } from '@api/controllers/playlistResourceBase';
 import { PlaylistResourceClipController } from '@api/controllers/playlistResourceClip';
+import { PlaylistResourceItemController } from '@api/controllers/playlistResourceItem';
 import { asyncHandler } from '@api/middleware/asyncHandler';
 
 const router = Router();
@@ -19,5 +20,10 @@ router.post('/:playlist_id_text/clip/:clip_id_text/first', asyncHandler(Playlist
 router.post('/:playlist_id_text/clip/:clip_id_text/between', asyncHandler(PlaylistResourceClipController.addClipToPlaylistBetween));
 router.post('/:playlist_id_text/clip/:clip_id_text/last', asyncHandler(PlaylistResourceClipController.addClipToPlaylistLast));
 router.delete('/:playlist_id_text/clip/:clip_id_text', asyncHandler(PlaylistResourceClipController.removeClipFromPlaylist));
+
+router.post('/:playlist_id_text/item/:item_id_text/first', asyncHandler(PlaylistResourceItemController.addItemToPlaylistFirst));
+router.post('/:playlist_id_text/item/:item_id_text/between', asyncHandler(PlaylistResourceItemController.addItemToPlaylistBetween));
+router.post('/:playlist_id_text/item/:item_id_text/last', asyncHandler(PlaylistResourceItemController.addItemToPlaylistLast));
+router.delete('/:playlist_id_text/item/:item_id_text', asyncHandler(PlaylistResourceItemController.removeItemFromPlaylist));
 
 export const playlistRouter = router;
