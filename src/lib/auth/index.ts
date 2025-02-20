@@ -115,6 +115,25 @@ export const ensureAuthenticated = (req: Request, res: Response, next: NextFunct
   });
 };
 
+export const optionalEnsureAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+  const token = req.cookies.jwt || req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    return next();
+  }
+  
+  // TODO: how to replace the any with specific types?
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  jwt.verify(token, config.auth.jwtSecret, (err: jwt.VerifyErrors | null, decoded: any) => {
+    if (err) {
+      return next();
+    }
+
+    req.user = decoded;
+    next();
+  });
+};
+
 export const logout = (req: Request, res: Response) => {
   res.clearCookie('jwt', {
     httpOnly: true,
