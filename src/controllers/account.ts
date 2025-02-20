@@ -43,7 +43,7 @@ class AccountController {
       const { id_text } = req.params;
       const config = { relations: publicRelations };
       // TODO: get if not a private account / not sharable
-      const data = await AccountController.accountService._getByIdText(id_text, config);
+      const data = await AccountController.accountService.getByIdText(id_text, config);
       handleReturnDataOrNotFound(res, data, 'Account');
     } catch (error) {
       handleGenericErrorResponse(res, error);
