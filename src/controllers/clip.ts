@@ -17,13 +17,13 @@ const clipSchema = Joi.object({
 
 const clipService = new ClipService();
 
-const verifyOwnership = () => {
+const verifyClipOwnership = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const account = req.user!;
     const { clip_id_text } = req.params;
 
     try {
-      const clip = await clipService.getByIdText(clip_id_text);
+      const clip = await clipService.getByIdText(clip_id_text, { relations: ['account'] });
       if (!clip) {
         return res.status(404).json({ message: 'Clip not found' });
       }
@@ -85,7 +85,7 @@ class ClipController {
 
   static async updateClip(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
-      verifyOwnership()(req, res, () => {
+      verifyClipOwnership()(req, res, () => {
         validateBodyObject(clipSchema, req, res, async () => {
           const account = req.user!;
           const { clip_id_text } = req.params;
@@ -104,7 +104,7 @@ class ClipController {
 
   static async deleteClip(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
-      verifyOwnership()(req, res, async () => {
+      verifyClipOwnership()(req, res, async () => {
         const account = req.user!;
         const { clip_id_text } = req.params;
 
