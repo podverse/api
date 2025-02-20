@@ -17,13 +17,13 @@ const playlistSchema = Joi.object({
 
 const playlistService = new PlaylistService();
 
-const verifyOwnership = () => {
+export const verifyPlaylistOwnership = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const account = req.user!;
     const { playlist_id_text } = req.params;
 
     try {
-      const playlist = await playlistService.getByIdText(playlist_id_text);
+      const playlist = await playlistService.getByIdText(playlist_id_text, { relations: ['account'] });
       if (!playlist) {
         return res.status(404).json({ message: 'Playlist not found' });
       }
@@ -87,7 +87,7 @@ class PlaylistController {
 
   static async updatePlaylist(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
-      verifyOwnership()(req, res, async () => {
+      verifyPlaylistOwnership()(req, res, async () => {
         validateBodyObject(playlistSchema, req, res, async () => {
           const account = req.user!;
           const { playlist_id_text } = req.params;
@@ -106,7 +106,7 @@ class PlaylistController {
 
   static async deletePlaylist(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
-      verifyOwnership()(req, res, async () => {
+      verifyPlaylistOwnership()(req, res, async () => {
         const account = req.user!;
         const { playlist_id_text } = req.params;
   
