@@ -12,4 +12,6 @@ router.get('/channel/:channelIdOrIdText', asyncHandler(ItemController.getManyByC
 router.get('/:idOrIdText', asyncHandler(ItemController.getByIdOrIdText));
 router.get('/', asyncHandler(ItemController.getMany));
 
+router.get('/chapters/:item_id_text', asyncHandler(ItemController.parseAndGetChapters));
+
 export const itemRouter = router;

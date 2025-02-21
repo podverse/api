@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
-import { Channel, ItemService, Item } from 'podverse-orm';
+import { ItemService } from 'podverse-orm';
 import { fetchChannel } from '@api/controllers/helpers/channel';
 import { handleReturnDataOrNotFound } from '@api/controllers/helpers/data';
 import { handleGenericErrorResponse } from '@api/controllers/helpers/error';
 import { getPaginationParams } from '@api/controllers/helpers/pagination';
+import { parseChapters } from 'podverse-parser';
+import { ItemChapterService } from 'podverse-orm';
 
 const allRelations = [
   'item_about',
@@ -38,6 +40,7 @@ const allRelations = [
 
 export class ItemController {
   private static itemService = new ItemService();
+  private static itemChapterService = new ItemChapterService();
 
   static async getByIdOrIdText(req: Request, res: Response): Promise<void> {
     const { idOrIdText } = req.params;
@@ -108,6 +111,28 @@ export class ItemController {
           meta: { page }
         });
       }
+    } catch (error) {
+      handleGenericErrorResponse(res, error);
+    }
+  }
+
+  static async parseAndGetChapters(req: Request, res: Response): Promise<void> {
+    const { item_id_text } = req.params;
+    try {
+      const item = await ItemController.itemService.getByIdOrIdText(item_id_text, { relations: allRelations });
+      if (!item) {
+        res.status(404).json({ message: 'Item not found' });
+        return;
+      }
+
+      await parseChapters(item);
+
+      const updatedItem = await ItemController.itemService.getByIdOrIdText(item_id_text, { relations: allRelations });
+      const chapters = await ItemController.itemChapterService.getAll(updatedItem.item_chapters_feed, {
+        order: { start_time: 'ASC' }
+      });
+
+      res.json({ data: chapters });
     } catch (error) {
       handleGenericErrorResponse(res, error);
     }
