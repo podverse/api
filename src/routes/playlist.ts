@@ -7,6 +7,7 @@ import { PlaylistResourceItemController } from '@api/controllers/playlistResourc
 import { asyncHandler } from '@api/middleware/asyncHandler';
 import { PlaylistResourceItemAddByRSSController } from '@api/controllers/playlistResourceItemAddByRSS';
 import { PlaylistResourceItemChapterController } from '@api/controllers/playlistResourceItemChapter';
+import { PlaylistResourceItemSoundbiteController } from '@api/controllers/playlistResourceItemSoundbite';
 
 const router = Router();
 router.use(`${config.api.prefix}${config.api.version}/playlist`, router);
@@ -37,5 +38,10 @@ router.post('/:playlist_id_text/chapter/:item_chapter_id_text/first', asyncHandl
 router.post('/:playlist_id_text/chapter/:item_chapter_id_text/between', asyncHandler(PlaylistResourceItemChapterController.addChapterToPlaylistBetween));
 router.post('/:playlist_id_text/chapter/:item_chapter_id_text/last', asyncHandler(PlaylistResourceItemChapterController.addChapterToPlaylistLast));
 router.delete('/:playlist_id_text/chapter/:item_chapter_id_text', asyncHandler(PlaylistResourceItemChapterController.removeChapterFromPlaylist));
+
+router.post('/:playlist_id_text/soundbite/:soundbite_id_text/first', asyncHandler(PlaylistResourceItemSoundbiteController.addItemSoundbiteToPlaylistFirst));
+router.post('/:playlist_id_text/soundbite/:soundbite_id_text/between', asyncHandler(PlaylistResourceItemSoundbiteController.addItemSoundbiteToPlaylistBetween));
+router.post('/:playlist_id_text/soundbite/:soundbite_id_text/last', asyncHandler(PlaylistResourceItemSoundbiteController.addItemSoundbiteToPlaylistLast));
+router.delete('/:playlist_id_text/soundbite/:soundbite_id_text', asyncHandler(PlaylistResourceItemSoundbiteController.removeItemSoundbiteFromPlaylist));
 
 export const playlistRouter = router;
