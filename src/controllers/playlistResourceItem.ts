@@ -1,8 +1,15 @@
 import { Request, Response } from 'express';
+import Joi from 'joi';
 import { PlaylistResourceItemService } from 'podverse-orm';
 import { handleGenericErrorResponse } from '@api/controllers/helpers/error';
 import { verifyPlaylistOwnership } from '@api/controllers/playlist';
 import { ensureAuthenticated } from '@api/lib/auth';
+import { validateBodyObject } from '@api/lib/validation';
+
+const addItemToPlaylistBetweenSchema = Joi.object({
+  position1: Joi.number().min(0).required(),
+  position2: Joi.number().min(Joi.ref('position1')).required()
+}).with('position1', 'position2');
 
 class PlaylistResourceItemController {
   private static playlistResourceItemService = new PlaylistResourceItemService();
@@ -38,15 +45,17 @@ class PlaylistResourceItemController {
 
   static async addItemToPlaylistBetween(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
-      verifyPlaylistOwnership()(req, res, async () => {        
-        try {
-          const { playlist_id_text, item_id_text } = req.params;
-          const { position1, position2 } = req.body;
-          const playlistResourceItem = await PlaylistResourceItemController.playlistResourceItemService.addItemToPlaylistBetween(playlist_id_text, item_id_text, position1, position2);
-          res.status(201).json(playlistResourceItem);
-        } catch (err) {
-          handleGenericErrorResponse(res, err);
-        }
+      verifyPlaylistOwnership()(req, res, async () => {
+        validateBodyObject(addItemToPlaylistBetweenSchema, req, res, async () => {
+          try {
+            const { playlist_id_text, item_id_text } = req.params;
+            const { position1, position2 } = req.body;
+            const playlistResourceItem = await PlaylistResourceItemController.playlistResourceItemService.addItemToPlaylistBetween(playlist_id_text, item_id_text, position1, position2);
+            res.status(201).json(playlistResourceItem);
+          } catch (err) {
+            handleGenericErrorResponse(res, err);
+          }
+        });
       });
     });
   }
@@ -55,9 +64,8 @@ class PlaylistResourceItemController {
     ensureAuthenticated(req, res, async () => {
       verifyPlaylistOwnership()(req, res, async () => {
         try {
-          const { playlist_id_text } = req.params;
-          const dto = req.body;
-          await PlaylistResourceItemController.playlistResourceItemService.removeItemFromPlaylist(playlist_id_text, dto);
+          const { playlist_id_text, item_id_text } = req.params;
+          await PlaylistResourceItemController.playlistResourceItemService.removeItemFromPlaylist(playlist_id_text, item_id_text);
           res.status(204).end();
         } catch (err) {
           handleGenericErrorResponse(res, err);

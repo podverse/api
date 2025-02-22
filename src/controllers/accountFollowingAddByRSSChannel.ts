@@ -11,6 +11,10 @@ const addRSSChannelSchema = Joi.object({
   image_url: Joi.string().uri().allow(null, '')
 });
 
+const removeRSSChannelSchema = Joi.object({
+  feed_url: Joi.string().uri().required()
+});
+
 class AccountFollowingAddByRSSChannelController {
   private static accountFollowingAddByRSSChannelService = new AccountFollowingAddByRSSChannelService();
 
@@ -32,15 +36,17 @@ class AccountFollowingAddByRSSChannelController {
 
   static async removeRSSChannel(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
-      const account = req.user!;
-      const { feed_url } = req.body;
+      validateBodyObject(removeRSSChannelSchema, req, res, async () => {
+        const account = req.user!;
+        const { feed_url } = req.body;
 
-      try {
-        await AccountFollowingAddByRSSChannelController.accountFollowingAddByRSSChannelService.removeRSSChannel(account.id, feed_url);
-        res.status(204).end();
-      } catch (err) {
-        handleGenericErrorResponse(res, err);
-      }
+        try {
+          await AccountFollowingAddByRSSChannelController.accountFollowingAddByRSSChannelService.removeRSSChannel(account.id, feed_url);
+          res.status(204).end();
+        } catch (err) {
+          handleGenericErrorResponse(res, err);
+        }
+      });
     });
   }
 }

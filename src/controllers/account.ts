@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import Joi from 'joi';
 import { ERROR_MESSAGES } from 'podverse-helpers';
 import { AccountResetPasswordService, AccountService, AccountVerificationService } from 'podverse-orm';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,6 +10,29 @@ import { getPaginationParams } from '@api/controllers/helpers/pagination';
 import { ensureAuthenticated } from '@api/lib/auth/';
 import { sendVerificationEmail } from '@api/lib/mailer/sendVerificationEmail';
 import { sendResetPasswordEmail } from '@api/lib/mailer/sendResetPasswordEmail';
+import { validateBodyObject } from '@api/lib/validation';
+
+const createAccountSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(8).required()
+});
+
+const sendVerificationEmailSchema = Joi.object({
+  email: Joi.string().email().required()
+});
+
+const verifyEmailSchema = Joi.object({
+  token: Joi.string().required()
+});
+
+const sendResetPasswordEmailSchema = Joi.object({
+  email: Joi.string().email().required()
+});
+
+const resetPasswordSchema = Joi.object({
+  token: Joi.string().required(),
+  password: Joi.string().min(8).required()
+});
 
 const publicRelations = [
   'account_following_channels',
@@ -92,34 +116,38 @@ class AccountController {
   }
 
   static async create(req: Request, res: Response): Promise<void> {
-    try {
-      const { email, password } = req.body;
-      await AccountController.accountService.create({ email, password });
-      await AccountController.sendVerificationEmailHelper(email);
-      res.json({
-        message: 'Account created'
-      });
-    } catch (error) {
-      if (error instanceof Error && error.message === ERROR_MESSAGES.ACCOUNT.ALREADY_EXISTS) {
+    validateBodyObject(createAccountSchema, req, res, async () => {
+      try {
+        const { email, password } = req.body;
+        await AccountController.accountService.create({ email, password });
+        await AccountController.sendVerificationEmailHelper(email);
         res.json({
           message: 'Account created'
         });
-      } else {
-        handleGenericErrorResponse(res, error);
+      } catch (error) {
+        if (error instanceof Error && error.message === ERROR_MESSAGES.ACCOUNT.ALREADY_EXISTS) {
+          res.json({
+            message: 'Account created'
+          });
+        } else {
+          handleGenericErrorResponse(res, error);
+        }
       }
-    }
+    });
   }
 
   static async sendVerificationEmail(req: Request, res: Response): Promise<void> {
-    try {
-      const { email } = req.body;
-      await AccountController.sendVerificationEmailHelper(email);
-      res.json({
-        message: 'Verification email sent'
-      });
-    } catch (error) {
-      handleGenericErrorResponse(res, error);
-    }
+    validateBodyObject(sendVerificationEmailSchema, req, res, async () => {
+      try {
+        const { email } = req.body;
+        await AccountController.sendVerificationEmailHelper(email);
+        res.json({
+          message: 'Verification email sent'
+        });
+      } catch (error) {
+        handleGenericErrorResponse(res, error);
+      }
+    });
   }
 
   private static async sendVerificationEmailHelper(email: string): Promise<void> {
@@ -141,33 +169,37 @@ class AccountController {
   }
 
   static async verifyEmail(req: Request, res: Response): Promise<void> {
-    try {
-      const { token } = req.body;
-      const accountVerification = await AccountController.accountVerificationService.getByToken(token);
+    validateBodyObject(verifyEmailSchema, req, res, async () => {
+      try {
+        const { token } = req.body;
+        const accountVerification = await AccountController.accountVerificationService.getByToken(token);
 
-      if (!accountVerification) {
-        res.status(400).json({ message: 'Invalid or expired verification token' });
-        return;
+        if (!accountVerification) {
+          res.status(400).json({ message: 'Invalid or expired verification token' });
+          return;
+        }
+
+        await AccountController.accountService.verifyEmail(accountVerification.account.id);
+
+        res.json({ message: 'Email verified successfully' });
+      } catch (error) {
+        handleGenericErrorResponse(res, error);
       }
-
-      await AccountController.accountService.verifyEmail(accountVerification.account.id);
-
-      res.json({ message: 'Email verified successfully' });
-    } catch (error) {
-      handleGenericErrorResponse(res, error);
-    }
+    });
   }
 
   static async sendResetPasswordEmail(req: Request, res: Response): Promise<void> {
-    try {
-      const { email } = req.body;
-      await AccountController.sendResetPasswordEmailHelper(email);
-      res.json({
-        message: 'Reset password email sent'
-      });
-    } catch (error) {
-      handleGenericErrorResponse(res, error);
-    }
+    validateBodyObject(sendResetPasswordEmailSchema, req, res, async () => {
+      try {
+        const { email } = req.body;
+        await AccountController.sendResetPasswordEmailHelper(email);
+        res.json({
+          message: 'Reset password email sent'
+        });
+      } catch (error) {
+        handleGenericErrorResponse(res, error);
+      }
+    });
   }
 
   private static async sendResetPasswordEmailHelper(email: string): Promise<void> {
@@ -189,21 +221,23 @@ class AccountController {
   }
 
   static async resetPassword(req: Request, res: Response): Promise<void> {
-    try {
-      const { token, password } = req.body;
-      const accountResetPassword = await AccountController.accountResetPasswordService.getByToken(token);
+    validateBodyObject(resetPasswordSchema, req, res, async () => {
+      try {
+        const { token, password } = req.body;
+        const accountResetPassword = await AccountController.accountResetPasswordService.getByToken(token);
 
-      if (!accountResetPassword) {
-        res.status(400).json({ message: 'Invalid or expired reset password token' });
-        return;
+        if (!accountResetPassword) {
+          res.status(400).json({ message: 'Invalid or expired reset password token' });
+          return;
+        }
+
+        await AccountController.accountService.resetPassword(accountResetPassword.account.id, password);
+
+        res.json({ message: 'Password reset successfully' });
+      } catch (error) {
+        handleGenericErrorResponse(res, error);
       }
-
-      await AccountController.accountService.resetPassword(accountResetPassword.account.id, password);
-
-      res.json({ message: 'Password reset successfully' });
-    } catch (error) {
-      handleGenericErrorResponse(res, error);
-    }
+    });
   }
 }
 
