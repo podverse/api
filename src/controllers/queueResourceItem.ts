@@ -1,8 +1,15 @@
 import { Request, Response } from 'express';
+import Joi from 'joi';
 import { QueueResourceItemService } from 'podverse-orm';
 import { handleGenericErrorResponse } from '@api/controllers/helpers/error';
 import { ensureAuthenticated } from '@api/lib/auth';
 import { verifyQueueOwnership } from '@api/controllers/queue';
+import { validateBodyObject } from '@api/lib/validation';
+
+const addItemToQueueBetweenSchema = Joi.object({
+  position1: Joi.number().min(0).required(),
+  position2: Joi.number().min(Joi.ref('position1')).required()
+}).with('position1', 'position2');
 
 class QueueResourceItemController {
   private static queueResourceItemService = new QueueResourceItemService();
@@ -54,16 +61,18 @@ class QueueResourceItemController {
 
   static async addItemToQueueBetween(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
-      verifyQueueOwnership()(req, res, async () => {
-        const { queue_id_text, item_id_text } = req.params;
-        const { position1, position2 } = req.body;
+      validateBodyObject(addItemToQueueBetweenSchema, req, res, async () => {
+        verifyQueueOwnership()(req, res, async () => {
+          const { queue_id_text, item_id_text } = req.params;
+          const { position1, position2 } = req.body;
 
-        try {
-          const queueResourceItem = await QueueResourceItemController.queueResourceItemService.addItemToQueueBetween(queue_id_text, item_id_text, position1, position2);
-          res.status(201).json(queueResourceItem);
-        } catch (err) {
-          handleGenericErrorResponse(res, err);
-        }
+          try {
+            const queueResourceItem = await QueueResourceItemController.queueResourceItemService.addItemToQueueBetween(queue_id_text, item_id_text, position1, position2);
+            res.status(201).json(queueResourceItem);
+          } catch (err) {
+            handleGenericErrorResponse(res, err);
+          }
+        });
       });
     });
   }
