@@ -32,16 +32,16 @@ router.delete('/:playlist_id_text/item/:item_id_text', asyncHandler(PlaylistReso
 router.post('/:playlist_id_text/item-add-by-rss/first', asyncHandler(PlaylistResourceItemAddByRSSController.addItemToPlaylistFirst));
 router.post('/:playlist_id_text/item-add-by-rss/between', asyncHandler(PlaylistResourceItemAddByRSSController.addItemToPlaylistBetween));
 router.post('/:playlist_id_text/item-add-by-rss/last', asyncHandler(PlaylistResourceItemAddByRSSController.addItemToPlaylistLast));
-router.delete('/:playlist_id_text/item-add-by-rss', asyncHandler(PlaylistResourceItemAddByRSSController.removeItemFromPlaylist));
+router.delete('/:playlist_id_text/item-add-by-rss/:hash_id', asyncHandler(PlaylistResourceItemAddByRSSController.removeItemFromPlaylist));
 
-router.post('/:playlist_id_text/chapter/:item_chapter_id_text/first', asyncHandler(PlaylistResourceItemChapterController.addChapterToPlaylistFirst));
-router.post('/:playlist_id_text/chapter/:item_chapter_id_text/between', asyncHandler(PlaylistResourceItemChapterController.addChapterToPlaylistBetween));
-router.post('/:playlist_id_text/chapter/:item_chapter_id_text/last', asyncHandler(PlaylistResourceItemChapterController.addChapterToPlaylistLast));
-router.delete('/:playlist_id_text/chapter/:item_chapter_id_text', asyncHandler(PlaylistResourceItemChapterController.removeChapterFromPlaylist));
+router.post('/:playlist_id_text/item-chapter/:item_chapter_id_text/first', asyncHandler(PlaylistResourceItemChapterController.addChapterToPlaylistFirst));
+router.post('/:playlist_id_text/item-chapter/:item_chapter_id_text/between', asyncHandler(PlaylistResourceItemChapterController.addChapterToPlaylistBetween));
+router.post('/:playlist_id_text/item-chapter/:item_chapter_id_text/last', asyncHandler(PlaylistResourceItemChapterController.addChapterToPlaylistLast));
+router.delete('/:playlist_id_text/item-chapter/:item_chapter_id_text', asyncHandler(PlaylistResourceItemChapterController.removeChapterFromPlaylist));
 
-router.post('/:playlist_id_text/soundbite/:soundbite_id_text/first', asyncHandler(PlaylistResourceItemSoundbiteController.addItemSoundbiteToPlaylistFirst));
-router.post('/:playlist_id_text/soundbite/:soundbite_id_text/between', asyncHandler(PlaylistResourceItemSoundbiteController.addItemSoundbiteToPlaylistBetween));
-router.post('/:playlist_id_text/soundbite/:soundbite_id_text/last', asyncHandler(PlaylistResourceItemSoundbiteController.addItemSoundbiteToPlaylistLast));
-router.delete('/:playlist_id_text/soundbite/:soundbite_id_text', asyncHandler(PlaylistResourceItemSoundbiteController.removeItemSoundbiteFromPlaylist));
+router.post('/:playlist_id_text/item-soundbite/:soundbite_id_text/first', asyncHandler(PlaylistResourceItemSoundbiteController.addItemSoundbiteToPlaylistFirst));
+router.post('/:playlist_id_text/item-soundbite/:soundbite_id_text/between', asyncHandler(PlaylistResourceItemSoundbiteController.addItemSoundbiteToPlaylistBetween));
+router.post('/:playlist_id_text/item-soundbite/:soundbite_id_text/last', asyncHandler(PlaylistResourceItemSoundbiteController.addItemSoundbiteToPlaylistLast));
+router.delete('/:playlist_id_text/item-soundbite/:soundbite_id_text', asyncHandler(PlaylistResourceItemSoundbiteController.removeItemSoundbiteFromPlaylist));
 
 export const playlistRouter = router;
