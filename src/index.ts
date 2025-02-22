@@ -18,6 +18,7 @@ import { itemRouter } from '@api/routes/item';
 import { mediumRouter } from '@api/routes/medium';
 import { playlistRouter } from './routes/playlist';
 import { clipRouter } from './routes/clip';
+import { queueRouter } from './routes/queue';
 
 logger.info(`NODE_ENV = ${config.nodeEnv}`);
 
@@ -56,6 +57,7 @@ export const startApp = async () => {
     app.use(itemRouter);
     app.use(mediumRouter);
     app.use(playlistRouter);
+    app.use(queueRouter);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
