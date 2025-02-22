@@ -15,7 +15,7 @@ router.use(`${config.api.prefix}${config.api.version}/playlist`, router);
 router.get('/private', asyncHandler(PlaylistController.getManyPrivate));
 router.get('/public', asyncHandler(PlaylistController.getManyPublic));
 router.post('/', asyncHandler(PlaylistController.createPlaylist));
-router.get('/resources/:playlist_id_text', asyncHandler(PlaylistResourceBaseController.getAllByPlaylistIdPublic));
+router.get('/:playlist_id_text/resources/', asyncHandler(PlaylistResourceBaseController.getAllByPlaylistIdPublic));
 router.patch('/:playlist_id_text', asyncHandler(PlaylistController.updatePlaylist));
 router.delete('/:playlist_id_text', asyncHandler(PlaylistController.deletePlaylist));
 
