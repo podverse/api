@@ -76,17 +76,14 @@ class PlaylistResourceItemAddByRSSController {
   static async removeItemFromPlaylist(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       verifyPlaylistOwnership()(req, res, async () => {
-        validateBodyObject(addItemToPlaylistSchema, req, res, async () => {
-          const { playlist_id_text } = req.params;
-          const { resource_data } = req.body;
+        const { playlist_id_text, hash_id } = req.params;
 
-          try {
-            await PlaylistResourceItemAddByRSSController.playlistResourceItemAddByRSSService.removeItemFromPlaylist(playlist_id_text, resource_data);
-            res.status(204).end();
-          } catch (err) {
-            handleGenericErrorResponse(res, err);
-          }
-        });
+        try {
+          await PlaylistResourceItemAddByRSSController.playlistResourceItemAddByRSSService.removeItemFromPlaylist(playlist_id_text, hash_id);
+          res.status(204).end();
+        } catch (err) {
+          handleGenericErrorResponse(res, err);
+        }
       });
     });
   }
