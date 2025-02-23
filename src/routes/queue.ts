@@ -6,6 +6,7 @@ import { QueueResourceBaseController } from '@api/controllers/queueResourceBase'
 import { QueueResourceItemController } from '@api/controllers/queueResourceItem';
 import { QueueResourceClipController } from '@api/controllers/queueResourceClip';
 import { QueueResourceItemAddByRSSController } from '@api/controllers/queueResourceItemAddByRSS';
+import { QueueResourceItemChapterController } from '@api/controllers/queueResourceItemChapter';
 
 const router = Router();
 router.use(`${config.api.prefix}${config.api.version}/queue`, router);
@@ -35,5 +36,12 @@ router.post('/:queue_id_text/item-add-by-rss/last', asyncHandler(QueueResourceIt
 router.post('/:queue_id_text/item-add-by-rss/between', asyncHandler(QueueResourceItemAddByRSSController.addItemToQueueBetween));
 router.post('/:queue_id_text/item-add-by-rss/history', asyncHandler(QueueResourceItemAddByRSSController.addItemToHistory));
 router.delete('/:queue_id_text/item-add-by-rss/:hash_id', asyncHandler(QueueResourceItemAddByRSSController.removeItemFromQueue));
+
+router.post('/:queue_id_text/item-chapter/:item_chapter_id_text/now-playing', asyncHandler(QueueResourceItemChapterController.addItemChapterToNowPlaying));
+router.post('/:queue_id_text/item-chapter/:item_chapter_id_text/next', asyncHandler(QueueResourceItemChapterController.addItemChapterToQueueNext));
+router.post('/:queue_id_text/item-chapter/:item_chapter_id_text/last', asyncHandler(QueueResourceItemChapterController.addItemChapterToQueueLast));
+router.post('/:queue_id_text/item-chapter/:item_chapter_id_text/between', asyncHandler(QueueResourceItemChapterController.addItemChapterToQueueBetween));
+router.post('/:queue_id_text/item-chapter/:item_chapter_id_text/history', asyncHandler(QueueResourceItemChapterController.addItemChapterToHistory));
+router.delete('/:queue_id_text/item-chapter/:item_chapter_id_text', asyncHandler(QueueResourceItemChapterController.removeItemChapterFromQueue));
 
 export const queueRouter = router;
