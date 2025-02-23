@@ -7,6 +7,7 @@ import { QueueResourceItemController } from '@api/controllers/queueResourceItem'
 import { QueueResourceClipController } from '@api/controllers/queueResourceClip';
 import { QueueResourceItemAddByRSSController } from '@api/controllers/queueResourceItemAddByRSS';
 import { QueueResourceItemChapterController } from '@api/controllers/queueResourceItemChapter';
+import { QueueResourceItemSoundbiteController } from '@api/controllers/queueResourceItemSoundbite';
 
 const router = Router();
 router.use(`${config.api.prefix}${config.api.version}/queue`, router);
@@ -43,5 +44,12 @@ router.post('/:queue_id_text/item-chapter/:item_chapter_id_text/last', asyncHand
 router.post('/:queue_id_text/item-chapter/:item_chapter_id_text/between', asyncHandler(QueueResourceItemChapterController.addItemChapterToQueueBetween));
 router.post('/:queue_id_text/item-chapter/:item_chapter_id_text/history', asyncHandler(QueueResourceItemChapterController.addItemChapterToHistory));
 router.delete('/:queue_id_text/item-chapter/:item_chapter_id_text', asyncHandler(QueueResourceItemChapterController.removeItemChapterFromQueue));
+
+router.post('/:queue_id_text/item-soundbite/:item_soundbite_id_text/now-playing', asyncHandler(QueueResourceItemSoundbiteController.addItemSoundbiteToNowPlaying));
+router.post('/:queue_id_text/item-soundbite/:item_soundbite_id_text/next', asyncHandler(QueueResourceItemSoundbiteController.addItemSoundbiteToQueueNext));
+router.post('/:queue_id_text/item-soundbite/:item_soundbite_id_text/last', asyncHandler(QueueResourceItemSoundbiteController.addItemSoundbiteToQueueLast));
+router.post('/:queue_id_text/item-soundbite/:item_soundbite_id_text/between', asyncHandler(QueueResourceItemSoundbiteController.addItemSoundbiteToQueueBetween));
+router.post('/:queue_id_text/item-soundbite/:item_soundbite_id_text/history', asyncHandler(QueueResourceItemSoundbiteController.addItemSoundbiteToHistory));
+router.delete('/:queue_id_text/item-soundbite/:item_soundbite_id_text', asyncHandler(QueueResourceItemSoundbiteController.removeItemSoundbiteFromQueue));
 
 export const queueRouter = router;
