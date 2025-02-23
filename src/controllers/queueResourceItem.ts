@@ -14,21 +14,6 @@ const addItemToQueueBetweenSchema = Joi.object({
 class QueueResourceItemController {
   private static queueResourceItemService = new QueueResourceItemService();
 
-  static async addItemToNowPlaying(req: Request, res: Response): Promise<void> {
-    ensureAuthenticated(req, res, async () => {
-      verifyQueueOwnership()(req, res, async () => {
-        const { queue_id_text, item_id_text } = req.params;
-
-        try {
-          const queueResourceItem = await QueueResourceItemController.queueResourceItemService.addItemToNowPlaying(queue_id_text, item_id_text);
-          res.status(201).json(queueResourceItem);
-        } catch (err) {
-          handleGenericErrorResponse(res, err);
-        }
-      });
-    });
-  }
-
   static async addItemToQueueNext(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       verifyQueueOwnership()(req, res, async () => {
@@ -73,6 +58,21 @@ class QueueResourceItemController {
             handleGenericErrorResponse(res, err);
           }
         });
+      });
+    });
+  }
+
+  static async addItemToNowPlaying(req: Request, res: Response): Promise<void> {
+    ensureAuthenticated(req, res, async () => {
+      verifyQueueOwnership()(req, res, async () => {
+        const { queue_id_text, item_id_text } = req.params;
+
+        try {
+          const queueResourceItem = await QueueResourceItemController.queueResourceItemService.addItemToNowPlaying(queue_id_text, item_id_text);
+          res.status(201).json(queueResourceItem);
+        } catch (err) {
+          handleGenericErrorResponse(res, err);
+        }
       });
     });
   }
