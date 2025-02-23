@@ -31,12 +31,12 @@ router.post('/:queue_id_text/item/:item_id_text/between', asyncHandler(QueueReso
 router.post('/:queue_id_text/item/:item_id_text/history', asyncHandler(QueueResourceItemController.addItemToHistory));
 router.delete('/:queue_id_text/item/:item_id_text', asyncHandler(QueueResourceItemController.removeItemFromQueue));
 
-router.post('/:queue_id_text/item-add-by-rss/now-playing', asyncHandler(QueueResourceItemAddByRSSController.addItemToNowPlaying));
-router.post('/:queue_id_text/item-add-by-rss/next', asyncHandler(QueueResourceItemAddByRSSController.addItemToQueueNext));
-router.post('/:queue_id_text/item-add-by-rss/last', asyncHandler(QueueResourceItemAddByRSSController.addItemToQueueLast));
-router.post('/:queue_id_text/item-add-by-rss/between', asyncHandler(QueueResourceItemAddByRSSController.addItemToQueueBetween));
-router.post('/:queue_id_text/item-add-by-rss/history', asyncHandler(QueueResourceItemAddByRSSController.addItemToHistory));
-router.delete('/:queue_id_text/item-add-by-rss/:add_by_rss_hash_id', asyncHandler(QueueResourceItemAddByRSSController.removeItemFromQueue));
+router.post('/:queue_id_text/item-add-by-rss/now-playing', asyncHandler(QueueResourceItemAddByRSSController.addItemAddByRSSToNowPlaying));
+router.post('/:queue_id_text/item-add-by-rss/next', asyncHandler(QueueResourceItemAddByRSSController.addItemAddByRSSToQueueNext));
+router.post('/:queue_id_text/item-add-by-rss/last', asyncHandler(QueueResourceItemAddByRSSController.addItemAddByRSSToQueueLast));
+router.post('/:queue_id_text/item-add-by-rss/between', asyncHandler(QueueResourceItemAddByRSSController.addItemAddByRSSToQueueBetween));
+router.post('/:queue_id_text/item-add-by-rss/history', asyncHandler(QueueResourceItemAddByRSSController.addItemAddByRSSToHistory));
+router.delete('/:queue_id_text/item-add-by-rss/:add_by_rss_hash_id', asyncHandler(QueueResourceItemAddByRSSController.removeItemAddByRSSFromQueue));
 
 router.post('/:queue_id_text/item-chapter/:item_chapter_id_text/now-playing', asyncHandler(QueueResourceItemChapterController.addItemChapterToNowPlaying));
 router.post('/:queue_id_text/item-chapter/:item_chapter_id_text/next', asyncHandler(QueueResourceItemChapterController.addItemChapterToQueueNext));

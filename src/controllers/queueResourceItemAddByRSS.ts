@@ -19,15 +19,14 @@ const addItemToQueueBetweenSchema = Joi.object({
 class QueueResourceItemAddByRSSController {
   private static queueResourceService = new QueueResourceService();
 
-  static async addItemToQueueNext(req: Request, res: Response): Promise<void> {
+  static async addItemAddByRSSToQueueNext(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       verifyQueueOwnership()(req, res, async () => {
         validateBodyObject(addItemToQueueSchema, req, res, async () => {
           const { queue_id_text } = req.params;
           const { add_by_rss_resource_data } = req.body;
-
           try {
-            const queueResource = await QueueResourceItemAddByRSSController.queueResourceService.addItemToQueueNext(queue_id_text, add_by_rss_resource_data);
+            const queueResource = await QueueResourceItemAddByRSSController.queueResourceService.addItemAddByRSSToQueueNext(queue_id_text, add_by_rss_resource_data);
             res.status(201).json(queueResource);
           } catch (err) {
             handleGenericErrorResponse(res, err);
@@ -37,15 +36,14 @@ class QueueResourceItemAddByRSSController {
     });
   }
 
-  static async addItemToQueueLast(req: Request, res: Response): Promise<void> {
+  static async addItemAddByRSSToQueueLast(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       verifyQueueOwnership()(req, res, async () => {
         validateBodyObject(addItemToQueueSchema, req, res, async () => {
           const { queue_id_text } = req.params;
           const { add_by_rss_resource_data } = req.body;
-
           try {
-            const queueResource = await QueueResourceItemAddByRSSController.queueResourceService.addItemToQueueLast(queue_id_text, add_by_rss_resource_data);
+            const queueResource = await QueueResourceItemAddByRSSController.queueResourceService.addItemAddByRSSToQueueLast(queue_id_text, add_by_rss_resource_data);
             res.status(201).json(queueResource);
           } catch (err) {
             handleGenericErrorResponse(res, err);
@@ -55,15 +53,14 @@ class QueueResourceItemAddByRSSController {
     });
   }
 
-  static async addItemToQueueBetween(req: Request, res: Response): Promise<void> {
+  static async addItemAddByRSSToQueueBetween(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       verifyQueueOwnership()(req, res, async () => {
         validateBodyObject(addItemToQueueBetweenSchema, req, res, async () => {
           const { queue_id_text } = req.params;
           const { add_by_rss_resource_data, position1, position2 } = req.body;
-
           try {
-            const queueResource = await QueueResourceItemAddByRSSController.queueResourceService.addItemToQueueBetween(queue_id_text, add_by_rss_resource_data, position1, position2);
+            const queueResource = await QueueResourceItemAddByRSSController.queueResourceService.addItemAddByRSSToQueueBetween(queue_id_text, add_by_rss_resource_data, position1, position2);
             res.status(201).json(queueResource);
           } catch (err) {
             handleGenericErrorResponse(res, err);
@@ -73,15 +70,14 @@ class QueueResourceItemAddByRSSController {
     });
   }
 
-  static async addItemToNowPlaying(req: Request, res: Response): Promise<void> {
+  static async addItemAddByRSSToNowPlaying(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       verifyQueueOwnership()(req, res, async () => {
         validateBodyObject(addItemToQueueSchema, req, res, async () => {
           const { queue_id_text } = req.params;
           const { add_by_rss_resource_data } = req.body;
-
           try {
-            const queueResource = await QueueResourceItemAddByRSSController.queueResourceService.addItemToNowPlaying(queue_id_text, add_by_rss_resource_data);
+            const queueResource = await QueueResourceItemAddByRSSController.queueResourceService.addItemAddByRSSToNowPlaying(queue_id_text, add_by_rss_resource_data);
             res.status(201).json(queueResource);
           } catch (err) {
             handleGenericErrorResponse(res, err);
@@ -91,15 +87,14 @@ class QueueResourceItemAddByRSSController {
     });
   }
 
-  static async addItemToHistory(req: Request, res: Response): Promise<void> {
+  static async addItemAddByRSSToHistory(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       verifyQueueOwnership()(req, res, async () => {
         validateBodyObject(addItemToQueueSchema, req, res, async () => {
           const { queue_id_text } = req.params;
           const { add_by_rss_resource_data } = req.body;
-
           try {
-            const queueResource = await QueueResourceItemAddByRSSController.queueResourceService.addItemToHistory(queue_id_text, add_by_rss_resource_data);
+            const queueResource = await QueueResourceItemAddByRSSController.queueResourceService.addItemAddByRSSToHistory(queue_id_text, add_by_rss_resource_data);
             res.status(201).json(queueResource);
           } catch (err) {
             handleGenericErrorResponse(res, err);
@@ -109,13 +104,12 @@ class QueueResourceItemAddByRSSController {
     });
   }
 
-  static async removeItemFromQueue(req: Request, res: Response): Promise<void> {
+  static async removeItemAddByRSSFromQueue(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       verifyQueueOwnership()(req, res, async () => {
         const { queue_id_text, add_by_rss_hash_id } = req.params;
-
         try {
-          await QueueResourceItemAddByRSSController.queueResourceService.removeItemFromQueue(queue_id_text, add_by_rss_hash_id);
+          await QueueResourceItemAddByRSSController.queueResourceService.removeItemAddByRSSFromQueue(queue_id_text, add_by_rss_hash_id);
           res.status(204).end();
         } catch (err) {
           handleGenericErrorResponse(res, err);
