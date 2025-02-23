@@ -5,6 +5,7 @@ import { config } from '@api/config';
 import { QueueResourceBaseController } from '@api/controllers/queueResourceBase';
 import { QueueResourceItemController } from '@api/controllers/queueResourceItem';
 import { QueueResourceClipController } from '@api/controllers/queueResourceClip';
+import { QueueResourceItemAddByRSSController } from '@api/controllers/queueResourceItemAddByRSS';
 
 const router = Router();
 router.use(`${config.api.prefix}${config.api.version}/queue`, router);
@@ -14,6 +15,13 @@ router.post('/', asyncHandler(QueueController.create));
 router.get('/all-for-account/private', asyncHandler(QueueController.getAllPrivate));
 router.get('/:queue_id_text/resources', asyncHandler(QueueResourceBaseController.getAllByQueueIdPrivate));
 
+router.post('/:queue_id_text/clip/:clip_id_text/now-playing', asyncHandler(QueueResourceClipController.addClipToNowPlaying));
+router.post('/:queue_id_text/clip/:clip_id_text/next', asyncHandler(QueueResourceClipController.addClipToQueueNext));
+router.post('/:queue_id_text/clip/:clip_id_text/last', asyncHandler(QueueResourceClipController.addClipToQueueLast));
+router.post('/:queue_id_text/clip/:clip_id_text/between', asyncHandler(QueueResourceClipController.addClipToQueueBetween));
+router.post('/:queue_id_text/clip/:clip_id_text/history', asyncHandler(QueueResourceClipController.addClipToHistory));
+router.delete('/:queue_id_text/clip/:clip_id_text', asyncHandler(QueueResourceClipController.removeClipFromQueue));
+
 router.post('/:queue_id_text/item/:item_id_text/now-playing', asyncHandler(QueueResourceItemController.addItemToNowPlaying));
 router.post('/:queue_id_text/item/:item_id_text/next', asyncHandler(QueueResourceItemController.addItemToQueueNext));
 router.post('/:queue_id_text/item/:item_id_text/last', asyncHandler(QueueResourceItemController.addItemToQueueLast));
@@ -21,11 +29,11 @@ router.post('/:queue_id_text/item/:item_id_text/between', asyncHandler(QueueReso
 router.post('/:queue_id_text/item/:item_id_text/history', asyncHandler(QueueResourceItemController.addItemToHistory));
 router.delete('/:queue_id_text/item/:item_id_text', asyncHandler(QueueResourceItemController.removeItemFromQueue));
 
-router.post('/:queue_id_text/clip/:clip_id_text/now-playing', asyncHandler(QueueResourceClipController.addClipToNowPlaying));
-router.post('/:queue_id_text/clip/:clip_id_text/next', asyncHandler(QueueResourceClipController.addClipToQueueNext));
-router.post('/:queue_id_text/clip/:clip_id_text/last', asyncHandler(QueueResourceClipController.addClipToQueueLast));
-router.post('/:queue_id_text/clip/:clip_id_text/between', asyncHandler(QueueResourceClipController.addClipToQueueBetween));
-router.post('/:queue_id_text/clip/:clip_id_text/history', asyncHandler(QueueResourceClipController.addClipToHistory));
-router.delete('/:queue_id_text/clip/:clip_id_text', asyncHandler(QueueResourceClipController.removeClipFromQueue));
+router.post('/:queue_id_text/item-add-by-rss/now-playing', asyncHandler(QueueResourceItemAddByRSSController.addItemToNowPlaying));
+router.post('/:queue_id_text/item-add-by-rss/next', asyncHandler(QueueResourceItemAddByRSSController.addItemToQueueNext));
+router.post('/:queue_id_text/item-add-by-rss/last', asyncHandler(QueueResourceItemAddByRSSController.addItemToQueueLast));
+router.post('/:queue_id_text/item-add-by-rss/between', asyncHandler(QueueResourceItemAddByRSSController.addItemToQueueBetween));
+router.post('/:queue_id_text/item-add-by-rss/history', asyncHandler(QueueResourceItemAddByRSSController.addItemToHistory));
+router.delete('/:queue_id_text/item-add-by-rss/:hash_id', asyncHandler(QueueResourceItemAddByRSSController.removeItemFromQueue));
 
 export const queueRouter = router;
