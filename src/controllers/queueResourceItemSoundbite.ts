@@ -17,10 +17,10 @@ class QueueResourceItemSoundbiteController {
   static async addItemSoundbiteToQueueNext(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       verifyQueueOwnership()(req, res, async () => {
-        const { queue_id_text, soundbite_id_text } = req.params;
+        const { queue_id_text, item_soundbite_id_text } = req.params;
 
         try {
-          const queueResourceItemSoundbite = await QueueResourceItemSoundbiteController.queueResourceItemSoundbiteService.addItemSoundbiteToQueueNext(queue_id_text, soundbite_id_text);
+          const queueResourceItemSoundbite = await QueueResourceItemSoundbiteController.queueResourceItemSoundbiteService.addItemSoundbiteToQueueNext(queue_id_text, item_soundbite_id_text);
           res.status(201).json(queueResourceItemSoundbite);
         } catch (err) {
           handleGenericErrorResponse(res, err);
@@ -32,10 +32,10 @@ class QueueResourceItemSoundbiteController {
   static async addItemSoundbiteToQueueLast(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       verifyQueueOwnership()(req, res, async () => {
-        const { queue_id_text, soundbite_id_text } = req.params;
+        const { queue_id_text, item_soundbite_id_text } = req.params;
 
         try {
-          const queueResourceItemSoundbite = await QueueResourceItemSoundbiteController.queueResourceItemSoundbiteService.addItemSoundbiteToQueueLast(queue_id_text, soundbite_id_text);
+          const queueResourceItemSoundbite = await QueueResourceItemSoundbiteController.queueResourceItemSoundbiteService.addItemSoundbiteToQueueLast(queue_id_text, item_soundbite_id_text);
           res.status(201).json(queueResourceItemSoundbite);
         } catch (err) {
           handleGenericErrorResponse(res, err);
@@ -48,11 +48,11 @@ class QueueResourceItemSoundbiteController {
     ensureAuthenticated(req, res, async () => {
       validateBodyObject(addItemSoundbiteToQueueBetweenSchema, req, res, async () => {
         verifyQueueOwnership()(req, res, async () => {
-          const { queue_id_text, soundbite_id_text } = req.params;
+          const { queue_id_text, item_soundbite_id_text } = req.params;
           const { position1, position2 } = req.body;
 
           try {
-            const queueResourceItemSoundbite = await QueueResourceItemSoundbiteController.queueResourceItemSoundbiteService.addItemSoundbiteToQueueBetween(queue_id_text, soundbite_id_text, position1, position2);
+            const queueResourceItemSoundbite = await QueueResourceItemSoundbiteController.queueResourceItemSoundbiteService.addItemSoundbiteToQueueBetween(queue_id_text, item_soundbite_id_text, position1, position2);
             res.status(201).json(queueResourceItemSoundbite);
           } catch (err) {
             handleGenericErrorResponse(res, err);
@@ -65,10 +65,10 @@ class QueueResourceItemSoundbiteController {
   static async addItemSoundbiteToNowPlaying(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       verifyQueueOwnership()(req, res, async () => {
-        const { queue_id_text, soundbite_id_text } = req.params;
+        const { queue_id_text, item_soundbite_id_text } = req.params;
 
         try {
-          const queueResourceItemSoundbite = await QueueResourceItemSoundbiteController.queueResourceItemSoundbiteService.addItemSoundbiteToNowPlaying(queue_id_text, soundbite_id_text);
+          const queueResourceItemSoundbite = await QueueResourceItemSoundbiteController.queueResourceItemSoundbiteService.addItemSoundbiteToNowPlaying(queue_id_text, item_soundbite_id_text);
           res.status(201).json(queueResourceItemSoundbite);
         } catch (err) {
           handleGenericErrorResponse(res, err);
@@ -80,10 +80,10 @@ class QueueResourceItemSoundbiteController {
   static async addItemSoundbiteToHistory(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       verifyQueueOwnership()(req, res, async () => {
-        const { queue_id_text, soundbite_id_text } = req.params;
-
+        const { queue_id_text, item_soundbite_id_text } = req.params;
+        
         try {
-          const queueResourceItemSoundbite = await QueueResourceItemSoundbiteController.queueResourceItemSoundbiteService.addItemSoundbiteToHistory(queue_id_text, soundbite_id_text);
+          const queueResourceItemSoundbite = await QueueResourceItemSoundbiteController.queueResourceItemSoundbiteService.addItemSoundbiteToHistory(queue_id_text, item_soundbite_id_text);
           res.status(201).json(queueResourceItemSoundbite);
         } catch (err) {
           handleGenericErrorResponse(res, err);
@@ -95,10 +95,10 @@ class QueueResourceItemSoundbiteController {
   static async removeItemSoundbiteFromQueue(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
       verifyQueueOwnership()(req, res, async () => {
-        const { queue_id_text, soundbite_id_text } = req.params;
+        const { queue_id_text, item_soundbite_id_text } = req.params;
 
         try {
-          await QueueResourceItemSoundbiteController.queueResourceItemSoundbiteService.removeItemSoundbiteFromQueue(queue_id_text, soundbite_id_text);
+          await QueueResourceItemSoundbiteController.queueResourceItemSoundbiteService.removeItemSoundbiteFromQueue(queue_id_text, item_soundbite_id_text);
           res.status(204).end();
         } catch (err) {
           handleGenericErrorResponse(res, err);
