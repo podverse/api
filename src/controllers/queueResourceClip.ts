@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Joi from 'joi';
-import { QueueResourceClipService } from 'podverse-orm';
+import { QueueResourceService } from 'podverse-orm';
 import { handleGenericErrorResponse } from '@api/controllers/helpers/error';
 import { ensureAuthenticated } from '@api/lib/auth';
 import { verifyQueueOwnership } from '@api/controllers/queue';
@@ -12,7 +12,7 @@ const addClipToQueueBetweenSchema = Joi.object({
 }).with('position1', 'position2');
 
 class QueueResourceClipController {
-  private static queueResourceClipService = new QueueResourceClipService();
+  private static queueResourceService = new QueueResourceService();
 
   static async addClipToQueueNext(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
@@ -20,8 +20,8 @@ class QueueResourceClipController {
         const { queue_id_text, clip_id_text } = req.params;
 
         try {
-          const queueResourceClip = await QueueResourceClipController.queueResourceClipService.addClipToQueueNext(queue_id_text, clip_id_text);
-          res.status(201).json(queueResourceClip);
+          const queueResource = await QueueResourceClipController.queueResourceService.addClipToQueueNext(queue_id_text, clip_id_text);
+          res.status(201).json(queueResource);
         } catch (err) {
           handleGenericErrorResponse(res, err);
         }
@@ -35,8 +35,8 @@ class QueueResourceClipController {
         const { queue_id_text, clip_id_text } = req.params;
 
         try {
-          const queueResourceClip = await QueueResourceClipController.queueResourceClipService.addClipToQueueLast(queue_id_text, clip_id_text);
-          res.status(201).json(queueResourceClip);
+          const queueResource = await QueueResourceClipController.queueResourceService.addClipToQueueLast(queue_id_text, clip_id_text);
+          res.status(201).json(queueResource);
         } catch (err) {
           handleGenericErrorResponse(res, err);
         }
@@ -52,8 +52,8 @@ class QueueResourceClipController {
           const { position1, position2 } = req.body;
 
           try {
-            const queueResourceClip = await QueueResourceClipController.queueResourceClipService.addClipToQueueBetween(queue_id_text, clip_id_text, position1, position2);
-            res.status(201).json(queueResourceClip);
+            const queueResource = await QueueResourceClipController.queueResourceService.addClipToQueueBetween(queue_id_text, clip_id_text, position1, position2);
+            res.status(201).json(queueResource);
           } catch (err) {
             handleGenericErrorResponse(res, err);
           }
@@ -68,8 +68,8 @@ class QueueResourceClipController {
         const { queue_id_text, clip_id_text } = req.params;
 
         try {
-          const queueResourceClip = await QueueResourceClipController.queueResourceClipService.addClipToNowPlaying(queue_id_text, clip_id_text);
-          res.status(201).json(queueResourceClip);
+          const queueResource = await QueueResourceClipController.queueResourceService.addClipToNowPlaying(queue_id_text, clip_id_text);
+          res.status(201).json(queueResource);
         } catch (err) {
           handleGenericErrorResponse(res, err);
         }
@@ -83,8 +83,8 @@ class QueueResourceClipController {
         const { queue_id_text, clip_id_text } = req.params;
 
         try {
-          const queueResourceClip = await QueueResourceClipController.queueResourceClipService.addClipToHistory(queue_id_text, clip_id_text);
-          res.status(201).json(queueResourceClip);
+          const queueResource = await QueueResourceClipController.queueResourceService.addClipToHistory(queue_id_text, clip_id_text);
+          res.status(201).json(queueResource);
         } catch (err) {
           handleGenericErrorResponse(res, err);
         }
@@ -98,7 +98,7 @@ class QueueResourceClipController {
         const { queue_id_text, clip_id_text } = req.params;
 
         try {
-          await QueueResourceClipController.queueResourceClipService.removeClipFromQueue(queue_id_text, clip_id_text);
+          await QueueResourceClipController.queueResourceService.removeClipFromQueue(queue_id_text, clip_id_text);
           res.status(204).end();
         } catch (err) {
           handleGenericErrorResponse(res, err);

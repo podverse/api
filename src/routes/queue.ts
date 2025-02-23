@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { QueueController } from '@api/controllers/queue';
 import { asyncHandler } from '@api/middleware/asyncHandler';
 import { config } from '@api/config';
-import { QueueResourceBaseController } from '@api/controllers/queueResourceBase';
+import { QueueResourceController } from '@api/controllers/queueResource';
 import { QueueResourceItemController } from '@api/controllers/queueResourceItem';
 import { QueueResourceClipController } from '@api/controllers/queueResourceClip';
 import { QueueResourceItemAddByRSSController } from '@api/controllers/queueResourceItemAddByRSS';
@@ -15,7 +15,7 @@ router.use(`${config.api.prefix}${config.api.version}/queue`, router);
 router.post('/', asyncHandler(QueueController.create));
 // router.delete('/:queue_id_text', asyncHandler(QueueController.delete)); // This may not be needed
 router.get('/all-for-account/private', asyncHandler(QueueController.getAllPrivate));
-router.get('/:queue_id_text/resources', asyncHandler(QueueResourceBaseController.getAllByQueueIdPrivate));
+router.get('/:queue_id_text/resources', asyncHandler(QueueResourceController.getAllByQueueIdPrivate));
 
 router.post('/:queue_id_text/clip/:clip_id_text/now-playing', asyncHandler(QueueResourceClipController.addClipToNowPlaying));
 router.post('/:queue_id_text/clip/:clip_id_text/next', asyncHandler(QueueResourceClipController.addClipToQueueNext));
@@ -36,7 +36,7 @@ router.post('/:queue_id_text/item-add-by-rss/next', asyncHandler(QueueResourceIt
 router.post('/:queue_id_text/item-add-by-rss/last', asyncHandler(QueueResourceItemAddByRSSController.addItemToQueueLast));
 router.post('/:queue_id_text/item-add-by-rss/between', asyncHandler(QueueResourceItemAddByRSSController.addItemToQueueBetween));
 router.post('/:queue_id_text/item-add-by-rss/history', asyncHandler(QueueResourceItemAddByRSSController.addItemToHistory));
-router.delete('/:queue_id_text/item-add-by-rss/:hash_id', asyncHandler(QueueResourceItemAddByRSSController.removeItemFromQueue));
+router.delete('/:queue_id_text/item-add-by-rss/:add_by_rss_hash_id', asyncHandler(QueueResourceItemAddByRSSController.removeItemFromQueue));
 
 router.post('/:queue_id_text/item-chapter/:item_chapter_id_text/now-playing', asyncHandler(QueueResourceItemChapterController.addItemChapterToNowPlaying));
 router.post('/:queue_id_text/item-chapter/:item_chapter_id_text/next', asyncHandler(QueueResourceItemChapterController.addItemChapterToQueueNext));

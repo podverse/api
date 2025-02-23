@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { QueueResourceItemChapterService } from '@orm/services/queue/queueResourceItemChapter';
+import { QueueResourceService } from 'podverse-orm';
 import { handleGenericErrorResponse } from '@api/controllers/helpers/error';
 import { ensureAuthenticated } from '@api/lib/auth';
 import { verifyQueueOwnership } from '@api/controllers/queue';
@@ -12,7 +12,7 @@ const addItemChapterToQueueBetweenSchema = Joi.object({
 }).with('position1', 'position2');
 
 class QueueResourceItemChapterController {
-  private static queueResourceItemChapterService = new QueueResourceItemChapterService();
+  private static queueResourceService = new QueueResourceService();
 
   static async addItemChapterToQueueNext(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
@@ -20,8 +20,8 @@ class QueueResourceItemChapterController {
         const { queue_id_text, item_chapter_id_text } = req.params;
 
         try {
-          const queueResourceItemChapter = await QueueResourceItemChapterController.queueResourceItemChapterService.addItemChapterToQueueNext(queue_id_text, item_chapter_id_text);
-          res.status(201).json(queueResourceItemChapter);
+          const queueResource = await QueueResourceItemChapterController.queueResourceService.addItemChapterToQueueNext(queue_id_text, item_chapter_id_text);
+          res.status(201).json(queueResource);
         } catch (err) {
           handleGenericErrorResponse(res, err);
         }
@@ -35,8 +35,8 @@ class QueueResourceItemChapterController {
         const { queue_id_text, item_chapter_id_text } = req.params;
 
         try {
-          const queueResourceItemChapter = await QueueResourceItemChapterController.queueResourceItemChapterService.addItemChapterToQueueLast(queue_id_text, item_chapter_id_text);
-          res.status(201).json(queueResourceItemChapter);
+          const queueResource = await QueueResourceItemChapterController.queueResourceService.addItemChapterToQueueLast(queue_id_text, item_chapter_id_text);
+          res.status(201).json(queueResource);
         } catch (err) {
           handleGenericErrorResponse(res, err);
         }
@@ -52,8 +52,8 @@ class QueueResourceItemChapterController {
           const { position1, position2 } = req.body;
 
           try {
-            const queueResourceItemChapter = await QueueResourceItemChapterController.queueResourceItemChapterService.addItemChapterToQueueBetween(queue_id_text, item_chapter_id_text, position1, position2);
-            res.status(201).json(queueResourceItemChapter);
+            const queueResource = await QueueResourceItemChapterController.queueResourceService.addItemChapterToQueueBetween(queue_id_text, item_chapter_id_text, position1, position2);
+            res.status(201).json(queueResource);
           } catch (err) {
             handleGenericErrorResponse(res, err);
           }
@@ -68,8 +68,8 @@ class QueueResourceItemChapterController {
         const { queue_id_text, item_chapter_id_text } = req.params;
 
         try {
-          const queueResourceItemChapter = await QueueResourceItemChapterController.queueResourceItemChapterService.addItemChapterToNowPlaying(queue_id_text, item_chapter_id_text);
-          res.status(201).json(queueResourceItemChapter);
+          const queueResource = await QueueResourceItemChapterController.queueResourceService.addItemChapterToNowPlaying(queue_id_text, item_chapter_id_text);
+          res.status(201).json(queueResource);
         } catch (err) {
           handleGenericErrorResponse(res, err);
         }
@@ -83,8 +83,8 @@ class QueueResourceItemChapterController {
         const { queue_id_text, item_chapter_id_text } = req.params;
 
         try {
-          const queueResourceItemChapter = await QueueResourceItemChapterController.queueResourceItemChapterService.addItemChapterToHistory(queue_id_text, item_chapter_id_text);
-          res.status(201).json(queueResourceItemChapter);
+          const queueResource = await QueueResourceItemChapterController.queueResourceService.addItemChapterToHistory(queue_id_text, item_chapter_id_text);
+          res.status(201).json(queueResource);
         } catch (err) {
           handleGenericErrorResponse(res, err);
         }
@@ -98,7 +98,7 @@ class QueueResourceItemChapterController {
         const { queue_id_text, item_chapter_id_text } = req.params;
 
         try {
-          await QueueResourceItemChapterController.queueResourceItemChapterService.removeItemChapterFromQueue(queue_id_text, item_chapter_id_text);
+          await QueueResourceItemChapterController.queueResourceService.removeItemChapterFromQueue(queue_id_text, item_chapter_id_text);
           res.status(204).end();
         } catch (err) {
           handleGenericErrorResponse(res, err);
