@@ -92,7 +92,12 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
       maxAge: 31536000000 // 1 year in milliseconds
     });
 
-    return res.json({ message: 'Authenticated successfully', token });
+    const response: { message: string; token?: string } = { message: 'Authenticated successfully' };
+    if (req.body.includeTokenInResponseBody) {
+      response['token'] = token;
+    }
+
+    return res.json(response);
   })(req, res, next);
 };
 

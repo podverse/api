@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { config } from '@api/config';
 import { PlaylistController } from '@api/controllers/playlist';
-import { PlaylistResourceBaseController } from '@api/controllers/playlistResourceBase';
+import { PlaylistResourceController } from '@api/controllers/playlistResource';
 import { PlaylistResourceClipController } from '@api/controllers/playlistResourceClip';
 import { PlaylistResourceItemController } from '@api/controllers/playlistResourceItem';
 import { asyncHandler } from '@api/middleware/asyncHandler';
@@ -15,7 +15,7 @@ router.use(`${config.api.prefix}${config.api.version}/playlist`, router);
 router.get('/private', asyncHandler(PlaylistController.getManyPrivate));
 router.get('/public', asyncHandler(PlaylistController.getManyPublic));
 router.post('/', asyncHandler(PlaylistController.createPlaylist));
-router.get('/:playlist_id_text/resources/', asyncHandler(PlaylistResourceBaseController.getAllByPlaylistIdPublic));
+router.get('/:playlist_id_text/resources/', asyncHandler(PlaylistResourceController.getAllByPlaylistIdPublic));
 router.patch('/:playlist_id_text', asyncHandler(PlaylistController.updatePlaylist));
 router.delete('/:playlist_id_text', asyncHandler(PlaylistController.deletePlaylist));
 
@@ -29,10 +29,10 @@ router.post('/:playlist_id_text/item/:item_id_text/between', asyncHandler(Playli
 router.post('/:playlist_id_text/item/:item_id_text/last', asyncHandler(PlaylistResourceItemController.addItemToPlaylistLast));
 router.delete('/:playlist_id_text/item/:item_id_text', asyncHandler(PlaylistResourceItemController.removeItemFromPlaylist));
 
-router.post('/:playlist_id_text/item-add-by-rss/first', asyncHandler(PlaylistResourceItemAddByRSSController.addItemToPlaylistFirst));
-router.post('/:playlist_id_text/item-add-by-rss/between', asyncHandler(PlaylistResourceItemAddByRSSController.addItemToPlaylistBetween));
-router.post('/:playlist_id_text/item-add-by-rss/last', asyncHandler(PlaylistResourceItemAddByRSSController.addItemToPlaylistLast));
-router.delete('/:playlist_id_text/item-add-by-rss/:hash_id', asyncHandler(PlaylistResourceItemAddByRSSController.removeItemFromPlaylist));
+router.post('/:playlist_id_text/item-add-by-rss/first', asyncHandler(PlaylistResourceItemAddByRSSController.addItemAddByRSSToPlaylistFirst));
+router.post('/:playlist_id_text/item-add-by-rss/between', asyncHandler(PlaylistResourceItemAddByRSSController.addItemAddByRSSToPlaylistBetween));
+router.post('/:playlist_id_text/item-add-by-rss/last', asyncHandler(PlaylistResourceItemAddByRSSController.addItemAddByRSSToPlaylistLast));
+router.delete('/:playlist_id_text/item-add-by-rss/:add_by_rss_hash_id', asyncHandler(PlaylistResourceItemAddByRSSController.removeItemAddByRSSFromPlaylist));
 
 router.post('/:playlist_id_text/item-chapter/:item_chapter_id_text/first', asyncHandler(PlaylistResourceItemChapterController.addChapterToPlaylistFirst));
 router.post('/:playlist_id_text/item-chapter/:item_chapter_id_text/between', asyncHandler(PlaylistResourceItemChapterController.addChapterToPlaylistBetween));

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Joi from 'joi';
-import { PlaylistResourceItemService } from 'podverse-orm';
+import { PlaylistResourceService } from 'podverse-orm';
 import { handleGenericErrorResponse } from '@api/controllers/helpers/error';
 import { verifyPlaylistOwnership } from '@api/controllers/playlist';
 import { ensureAuthenticated } from '@api/lib/auth';
@@ -12,7 +12,7 @@ const addItemToPlaylistBetweenSchema = Joi.object({
 }).with('position1', 'position2');
 
 class PlaylistResourceItemController {
-  private static playlistResourceItemService = new PlaylistResourceItemService();
+  private static playlistResourceService = new PlaylistResourceService();
 
   static async addItemToPlaylistFirst(req: Request, res: Response): Promise<void> {
     ensureAuthenticated(req, res, async () => {
@@ -20,8 +20,8 @@ class PlaylistResourceItemController {
         const { playlist_id_text, item_id_text } = req.params;
 
         try {
-          const playlistResourceItem = await PlaylistResourceItemController.playlistResourceItemService.addItemToPlaylistFirst(playlist_id_text, item_id_text);
-          res.status(201).json(playlistResourceItem);
+          const playlistResource = await PlaylistResourceItemController.playlistResourceService.addItemToPlaylistFirst(playlist_id_text, item_id_text);
+          res.status(201).json(playlistResource);
         } catch (err) {
           handleGenericErrorResponse(res, err);
         }
@@ -34,8 +34,8 @@ class PlaylistResourceItemController {
       verifyPlaylistOwnership()(req, res, async () => {
         try {
           const { playlist_id_text, item_id_text } = req.params;
-          const playlistResourceItem = await PlaylistResourceItemController.playlistResourceItemService.addItemToPlaylistLast(playlist_id_text, item_id_text);
-          res.status(201).json(playlistResourceItem);
+          const playlistResource = await PlaylistResourceItemController.playlistResourceService.addItemToPlaylistLast(playlist_id_text, item_id_text);
+          res.status(201).json(playlistResource);
         } catch (err) {
           handleGenericErrorResponse(res, err);
         }
@@ -50,8 +50,8 @@ class PlaylistResourceItemController {
           try {
             const { playlist_id_text, item_id_text } = req.params;
             const { position1, position2 } = req.body;
-            const playlistResourceItem = await PlaylistResourceItemController.playlistResourceItemService.addItemToPlaylistBetween(playlist_id_text, item_id_text, position1, position2);
-            res.status(201).json(playlistResourceItem);
+            const playlistResource = await PlaylistResourceItemController.playlistResourceService.addItemToPlaylistBetween(playlist_id_text, item_id_text, position1, position2);
+            res.status(201).json(playlistResource);
           } catch (err) {
             handleGenericErrorResponse(res, err);
           }
@@ -65,7 +65,7 @@ class PlaylistResourceItemController {
       verifyPlaylistOwnership()(req, res, async () => {
         try {
           const { playlist_id_text, item_id_text } = req.params;
-          await PlaylistResourceItemController.playlistResourceItemService.removeItemFromPlaylist(playlist_id_text, item_id_text);
+          await PlaylistResourceItemController.playlistResourceService.removeItemFromPlaylist(playlist_id_text, item_id_text);
           res.status(204).end();
         } catch (err) {
           handleGenericErrorResponse(res, err);
